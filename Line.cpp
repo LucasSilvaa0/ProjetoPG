@@ -1,0 +1,53 @@
+#ifndef LINE_H
+#define LINE_H
+
+#include <Point.cpp>
+#include <Vector.cpp>
+#include <Sphere.cpp>
+
+class Line {
+public:
+    Point3D point1; // Primeiro ponto da linha
+    Vector3D line_vector; //Vetor diretor da reta
+
+    Line(const Point3D& p1, const Point3D& p2) : point1(p1), line_vector(p1-p2) {}
+
+    void print() const {
+        std::cout << "Line:\n";
+        std::cout << "  Point 1: ";
+        point1.print();
+        std::cout << "  Vetor diretor: ";
+        line_vector.print();
+
+    }
+
+    Point3D at(float t){
+        return point1 + line_vector*t;
+    }
+
+    float l_s_intersection(Sphere& s){
+
+        float i,j,k,u,v,w,a,b,c,r,dois=2;
+
+        a = s.C.getX(); b = s.C.getY(); c = s.C.getZ(); r = s.r;
+
+        i = point1.getX(); j = point1.getY(); k = point1.getZ();
+
+        u = line_vector.getX(); v = line_vector.getY(); w = line_vector.getZ();
+        
+        float A = u*u + v*v + w*w, B = dois*(i*u + j*v + k*w - a*i - a*u - b*j - b*v* - c*k - c*w), C = i*i + j*j + k*k + a*a + b*b + c*c - r*r;
+
+        float t1 = (-1*B+sqrt(B*B-4*A*C))/2*A; float t2 = (-1*B-sqrt(B*B-4*A*C))/2*A;
+
+        if(t1>0 && t1<=t2){
+            return t1;
+        }else if(t2>0){
+            return t2;
+        }
+        return -1;
+
+    }
+
+};
+
+#endif
