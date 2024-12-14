@@ -4,6 +4,7 @@
 #include <Point.cpp>
 #include <Vector.cpp>
 #include <Sphere.cpp>
+#include <Plane.cpp>
 
 class Line {
 public:
@@ -45,6 +46,21 @@ public:
             return t2;
         }
         return -1;
+
+    }
+
+    float l_p_intersection(Plane& p){
+        float x0,y0,z0,x,y,z,a,b,c,i,j,k,u,v,w;
+
+        x0 = p.point.getX(); y0 = p.point.getY(); z0 = p.point.getZ();
+
+        a = p.normal.getX(); b = p.normal.getY(); a = p.normal.getZ();
+
+        i = point1.getX(); j = point1.getY(); k = point1.getZ();
+
+        u = line_vector.getX(); v = line_vector.getY(); w = line_vector.getZ();
+
+        float t = -1*((a*i+b*j+c*k)+(-a*x0-b*y0-c*z0))/(a*u+b*v+c*w); 
 
     }
 

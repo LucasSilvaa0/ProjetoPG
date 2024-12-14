@@ -1,5 +1,5 @@
-#ifndef SPHEREHEADER
-#define SPHEREHEADER
+#ifndef PLANEHEADER
+#define PLANEHEADER
 
 #include <iostream>
 #include <Point.cpp>
