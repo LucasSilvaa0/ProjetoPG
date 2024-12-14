@@ -60,7 +60,7 @@ public:
 
         u = line_vector.getX(); v = line_vector.getY(); w = line_vector.getZ();
 
-        float t = -1*((a*i+b*j+c*k)+(-a*x0-b*y0-c*z0))/(a*u+b*v+c*w); 
+        float t = -1*((a*i+b*j+c*k)+(-a*x0-b*y0-c*z0))/(a*u+b*v+c*w);
 
     }
 
