@@ -1,16 +1,21 @@
 #include <iostream>
-#include <Point.cpp>
-#include <Plane.cpp>
-#include <Vector.cpp>
-#include <Sphere.cpp>
-#include <Line.cpp>
+#include "includes/Point.h"
+#include "includes/Plane.h"
+#include "includes/Vector.h"
+#include "includes/Sphere.h"
+#include "includes/Line.h"
 
 int main()
 {
 
-    Sphere s = Sphere(Point3D(0, 0, 0), 1);
+    Point3D p = Point3D(0, 0, 0);
 
-    Vector3D R = s.ReflectionVector(Vector3D(1, 1, 1), s.NormalVector(Point3D(1, 1, 0)));
+    Sphere s = Sphere(p, 1);
+
+    Vector3D v1 = Vector3D(1, 1, 1);
+    Point3D p2 = Point3D(1, 1, 0);
+
+    Vector3D R = s.ReflectionVector(v1, s.NormalVector(p2));
 
     R.print();
 
