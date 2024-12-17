@@ -12,12 +12,20 @@ int main()
 
     Sphere s = Sphere(p, 1);
 
-    Vector3D v1 = Vector3D(1, 1, 1);
-    Point3D p2 = Point3D(1, 1, 0);
+    Point3D p1 = Point3D(1, 1, 0);
+    Point3D p2 = Point3D(2, 2, 1);
 
-    Vector3D R = s.ReflectionVector(v1, s.NormalVector(p2));
+    Line l = Line(p1, p2);
+    float t = l.l_s_intersection(s);
+    Point3D intersec = l.at(t);
 
-    R.print();
+    std::cout << t << "\n";
+
+    intersec.print();
+
+    // Vector3D R = s.ReflectionVector(v1, s.NormalVector(p2));
+
+    // R.print();
 
     /*
     Point3D x = Point3D(0, 0, 0);

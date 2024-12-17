@@ -23,7 +23,12 @@ public:
         return Vector3D(x - other.x, y - other.y, z - other.z);
     }
 
-    float operator*(const Vector3D &other) const
+    Vector3D operator*(const float scalar)
+    {
+        return Vector3D(x * scalar, y * scalar, z * scalar);
+    }
+
+    float operator%(const Vector3D &other) const
     {
         return (other.x * x + other.y * y + other.z * z);
     }
@@ -68,10 +73,5 @@ public:
     double getY() const { return y; }
     double getZ() const { return z; }
 };
-
-Vector3D operator*(const float scalar, const Vector3D &vector)
-{
-    return Vector3D(vector.x * scalar, vector.y * scalar, vector.z * scalar);
-}
 
 #endif

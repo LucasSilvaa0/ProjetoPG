@@ -21,7 +21,8 @@ public:
     // Cálculo do vetor de reflexão de uma linha com a esfera
     Vector3D ReflectionVector(Vector3D &D, const Vector3D &N)
     {
-        return (D - (float(2) * (N * D)) * D);
+        float produtoEscalar = (N % D);
+        return (D - D * float(2 * produtoEscalar));
     };
 };
 
