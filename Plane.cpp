@@ -5,16 +5,19 @@
 #include <Point.cpp>
 #include <Vector.cpp>
 
-class Plane {
+class Plane
+{
 public:
-    Point3D point; // Ponto
+    Point3D point;   // Ponto
     Vector3D normal; // Vetor normal
 
-    Plane(Point3D point, Vector3D normal) : point(point), normal(normal) {
+    Plane(Point3D point, Vector3D normal) : point(point), normal(normal)
+    {
         this->normal.normalize();
     }
 
-    void print() const {
+    void print() const
+    {
         std::cout << "Plane:\n";
         std::cout << "  Point: ";
         point.print();
