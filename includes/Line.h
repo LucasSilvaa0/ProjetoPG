@@ -65,10 +65,8 @@ public:
 
         if (t1 >= 0 && t1 <= abs(t2))
         {
-            at(t1).print();
             return t1;
         }
-        at(t2).print();
         return t2;
     }
 
