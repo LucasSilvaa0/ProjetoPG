@@ -8,10 +8,10 @@ class Point3D
 {
 public:
     // Valores
-    float x, y, z;
+    double x, y, z;
 
     // Constructor
-    Point3D(float x = 0, float y = 0, float z = 0) : x(x), y(y), z(z) {}
+    Point3D(double x = 0, double y = 0, double z = 0) : x(x), y(y), z(z) {}
 
     // Operações
     Vector3D operator-(const Point3D &other) const
@@ -27,7 +27,7 @@ public:
     // Print
     void print() const
     {
-        std::cout << "Point({" << x << ", " << y << ", " << z << "})\n";
+        std::cout << "{" << x << ", " << y << ", " << z << "},";
     }
 
     // Getters

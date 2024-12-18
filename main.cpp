@@ -12,13 +12,15 @@ int main()
 
     Scene *cena = new Scene();
 
-    Point3D centro = Point3D(200, 90, 0);
+    Point3D centro1 = Point3D(200, 0, 20);
+    Point3D centro2 = Point3D(200, 0, -20);
 
-    Sphere palao = Sphere(centro, (float)100);
+    Sphere palao1 = Sphere(centro1, (double)25, 255,0,0);
+    Sphere palao2 = Sphere(centro2, (double)25, 0,0,255);
 
-    cena->esferas.push_back(palao);
+    cena->esferas.push_back(palao1);cena->esferas.push_back(palao2);
 
-    Camera camera = Camera(Point3D(0, 0, 0), Point3D(1, 0, 0), (float)2, 60, 15, cena);
+    Camera camera = Camera(Point3D(0, 0, 0), Point3D(1, 0, 0), (double)2, 256, 256, cena);
 
     camera.render();
 

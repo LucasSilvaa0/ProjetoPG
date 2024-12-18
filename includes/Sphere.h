@@ -8,11 +8,15 @@ class Sphere
 {
 public:
     Point3D C; // Centro
-    float r;   // Raio
+    double r;   // Raio
+    Vector3D cor;
 
-    Sphere(Point3D &centro, float raio = 0) : C(centro), r(raio) {}
+    Sphere(Point3D &centro, double raio, int R, int G, int B) : C(centro), r(raio) {
 
-    // Criação do vetor normal da esfera com o ponto de intercessão de uma linha
+        cor = Vector3D(R/(double)255, G/(double)255, B/(double)255);
+
+    }
+
     Vector3D NormalVector(const Point3D &p)
     {
         Vector3D v = Vector3D(p.getX() - C.x, p.getY() - C.y, p.getZ() - C.z);
@@ -20,11 +24,10 @@ public:
         return v;
     };
 
-    // Cálculo do vetor de reflexão de uma linha com a esfera
     Vector3D ReflectionVector(Vector3D &D, const Vector3D &N)
     {
-        float produtoEscalar = (N % D);
-        return Vector3D(D - (D * float(2 * produtoEscalar)));
+        double produtoEscalar = (N % D);
+        return Vector3D(D - (D * double(2 * produtoEscalar)));
     };
 };
 
