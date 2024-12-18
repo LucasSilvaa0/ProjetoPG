@@ -10,7 +10,7 @@ class Plane
 public:
     Point3D point;   // Ponto
     Vector3D normal; // Vetor normal
-
+    
     Plane(Point3D point, Vector3D normal) : point(point), normal(normal)
     {
         this->normal.normalize();

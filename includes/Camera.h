@@ -13,22 +13,29 @@ public:
     Point3D M;        // Ponto para onde a câmera aponta
     Vector3D Vup;     // Vetor para cima
     Vector3D W, U, V; // Vetores ortonormais
+    Plane tela;
+    Point3D centro_tela;
+    Point3D topo_tela;
+    Point3D esquerda_tela;
+    Point3D primeiro_pixel;
     float d;          // Distância entre a câmera e a tela
-    int v_res;        // Altura da tela
+    int w_res;        // Altura da tela
     int h_res;        // Largura da tela
 
-    Camera(const Point3D C, const Point3D M, const float d, const int v_res, const int h_res)
-        : C(C), M(M), d(d), v_res(v_res), h_res(h_res)
+    Camera(const Point3D C, const Point3D M, const float d, const int w_res, const int h_res)
+        : C(C), M(M), d(d), w_res(w_res), h_res(h_res)
     {
         updateOrthonormalVectors();
         
         auto temp = M-C; temp = temp*(float)-1;
-        
-        
 
-        auto [W,U,V] = gramSchmidt(temp);
+        std::tie(W,U,V) = gramSchmidt(temp);
 
         Vup = Vector3D(0,1,0);
+
+        centro_tela = C+W*((float)-1*d);
+        topo_tela = centro_tela+U;
+        esquerda_tela = centro_tela+V;
 
     }
 
@@ -78,7 +85,7 @@ public:
         std::cout << "  V Vector: ";
         V.print();
         std::cout << "  Distance to screen: " << d << "\n";
-        std::cout << "  Screen height: " << v_res << "\n";
+        std::cout << "  Screen height: " << h_res << "\n";
         std::cout << "  Screen width: " << h_res << "\n";
     }
 };
