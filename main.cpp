@@ -8,35 +8,32 @@
 int main()
 {
 
-    Point3D p = Point3D(0, 0, 0);
+    Point3D c = Point3D(0, 0, 0);
 
-    Sphere s = Sphere(p, 1);
+    Sphere s = Sphere(c, 5);
 
-    Point3D p1 = Point3D(1, 1, 0);
-    Point3D p2 = Point3D(2, 2, 1);
+    Point3D p1 = Point3D(-8, 3, 0);
+    Point3D p2 = Point3D(-4, 0, 0);
 
     Line l = Line(p1, p2);
+
+    l.point1.print();
+    l.line_vector.print();
+
     float t = l.l_s_intersection(s);
     Point3D intersec = l.at(t);
 
+    Vector3D v = Vector3D(intersec.x, intersec.y, intersec.z);
+
     std::cout << t << "\n";
 
+    v.normalize();
     intersec.print();
+    v.print();
 
-    // Vector3D R = s.ReflectionVector(v1, s.NormalVector(p2));
+    Vector3D R = s.ReflectionVector(l.line_vector, s.NormalVector(intersec));
 
-    // R.print();
-
-    /*
-    Point3D x = Point3D(0, 0, 0);
-    Vector3D norm = Vector3D(1, 0, 0);
-    Point3D p1 = Point3D(0, 0, 0);
-    Point3D p2 = Point3D(0, 1, 0);
-    Plane plano = Plane(x, norm);
-    Line linha = Line(p1, p2);
-    auto t = linha.l_p_intersection(plano);
-    auto intersec = linha.at(t);
-    */
+    R.print();
 
     return 0;
 }

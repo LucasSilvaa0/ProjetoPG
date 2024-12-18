@@ -12,7 +12,7 @@ public:
     Point3D point1;       // Primeiro ponto da linha
     Vector3D line_vector; // Vetor diretor da reta
 
-    Line(const Point3D &p1, const Point3D &p2) : point1(p1), line_vector(p1 - p2) {}
+    Line(const Point3D &p1, const Point3D &p2) : point1(p1), line_vector(p2 - p1) {}
 
     void print() const
     {
@@ -51,11 +51,13 @@ public:
         float t1 = (-1 * B + sqrt(B * B - 4 * A * C)) / (2 * A);
         float t2 = (-1 * B - sqrt(B * B - 4 * A * C)) / (2 * A);
 
-        if (t1 > 0 && t1 <= t2)
+        std::cout << "t1 = " << t1 << " t2 = " << t2 << std::endl;
+
+        if (t1 >= 0 && t1 <= abs(t2))
         {
             return t1;
         }
-        else if (t2 > 0)
+        else if (t2 >= 0)
         {
             return t2;
         }
