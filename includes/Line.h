@@ -11,11 +11,11 @@ class Line
 public:
     Point3D point1;       // Primeiro ponto da linha
     Vector3D line_vector; // Vetor diretor da reta
+    Vector3D cor;
 
     Line(const Point3D &p1, const Point3D &p2) : point1(p1), line_vector(p2 - p1)
     {
         line_vector.normalize();
-        
     }
 
     void print() const
@@ -65,10 +65,8 @@ public:
 
         if (t1 >= 0 && t1 <= abs(t2))
         {
-
             return t1;
         }
-
         return t2;
     }
 
