@@ -29,12 +29,14 @@ public:
         updateVectors();
     }
 
-    void updateCenter(const Point3D c){
+    void updateCenter(const Point3D c)
+    {
         C = c;
         updateVectors();
     }
 
-    void updateAim(const Point3D m){
+    void updateAim(const Point3D m)
+    {
         M = m;
         updateVectors();
     }
@@ -71,9 +73,9 @@ public:
 
                 bool achou = false;
 
-                //std::cout<<i*3+j+1<<'\n';
-                Point3D pixel_que_estamos = primeiro_pixel + (direita_1*j) + (subir_1*(-1*i));
-                //pixel_que_estamos.print();        
+                // std::cout<<i*3+j+1<<'\n';
+                Point3D pixel_que_estamos = primeiro_pixel + (direita_1 * j) + (subir_1 * (-1 * i));
+                // pixel_que_estamos.print();
 
                 Line linha_centro_pixel = Line(C, pixel_que_estamos);
 
@@ -115,14 +117,14 @@ public:
     void updateVectors()
     {
 
-        Vup = Vector3D(0,1,0);
-        W = (M-C);
+        Vup = Vector3D(0, 1, 0);
+        W = (M - C);
         W.normalize();
         U = W.cross(Vup);
         U.normalize();
         V = U.cross(W);
         V.normalize();
-        W = W*-1;
+        W = W * -1;
 
         centro_tela = C + (W * (d * -1));
         Point3D topo_tela = centro_tela + V;
@@ -137,7 +139,6 @@ public:
         float qtdup = (h_res - 1) / 2;
         float qtdesq = (w_res - 1) / 2;
         primeiro_pixel = centro_tela + ((subir_1 * qtdup) + (esquerda_1 * qtdesq));
-
     }
 
     void print() const

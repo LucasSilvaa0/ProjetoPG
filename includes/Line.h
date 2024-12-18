@@ -50,7 +50,9 @@ public:
         v = line_vector.getY();
         w = line_vector.getZ();
 
-        float A = u * u + v * v + w * w, B = dois * (i * u + j * v + k * w - a * i - a * u - b * j - b * v * -c * k - c * w), C = i * i + j * j + k * k + a * a + b * b + c * c - r * r;
+        float A = u * u + v * v + w * w;
+        float B = dois * (i * u + j * v + k * w - a * i - a * u - b * j - b * v - c * k - c * w);
+        float C = i * i + j * j + k * k + a * a + b * b + c * c - r * r;
 
         float DELTA = B * B - 4 * A * C;
         if (DELTA < 0)
@@ -63,10 +65,10 @@ public:
 
         if (t1 >= 0 && t1 <= abs(t2))
         {
-            
+            at(t1).print();
             return t1;
         }
-        
+        at(t2).print();
         return t2;
     }
 

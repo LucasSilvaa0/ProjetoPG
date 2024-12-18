@@ -12,9 +12,9 @@ int main()
 
     Scene *cena = new Scene();
 
-    Point3D centro = Point3D(20, 0, 0);
+    Point3D centro = Point3D(200, 90, 0);
 
-    Sphere palao = Sphere(centro, (float)1);
+    Sphere palao = Sphere(centro, (float)100);
 
     cena->esferas.push_back(palao);
 
