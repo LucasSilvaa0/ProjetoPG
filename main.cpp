@@ -4,36 +4,19 @@
 #include "includes/Vector.h"
 #include "includes/Sphere.h"
 #include "includes/Line.h"
+#include "includes/Camera.h"
 
 int main()
 {
 
-    Point3D c = Point3D(0, 0, 0);
+    Camera camera = Camera(Point3D(0,0,0),Point3D(1,0,0),(float)1,(float)1,(float)1);
 
-    Sphere s = Sphere(c, 5);
-
-    Point3D p1 = Point3D(-8, 3, 0);
-    Point3D p2 = Point3D(-4, 0, 0);
-
-    Line l = Line(p1, p2);
-
-    l.point1.print();
-    l.line_vector.print();
-
-    float t = l.l_s_intersection(s);
-    Point3D intersec = l.at(t);
-
-    Vector3D v = Vector3D(intersec.x, intersec.y, intersec.z);
-
-    std::cout << t << "\n";
-
-    v.normalize();
-    intersec.print();
-    v.print();
-
-    Vector3D R = s.ReflectionVector(l.line_vector, s.NormalVector(intersec));
-
-    R.print();
+    std::cout << "U: " << "\n";
+    camera.U.print();
+    std::cout << "V: " << "\n";
+    camera.V.print();
+    std::cout << "W: " << "\n";
+    camera.W.print();
 
     return 0;
 }
