@@ -27,15 +27,15 @@ public:
         line_vector.print();
     }
 
-    Point3D at(float t)
+    Point3D at(double t)
     {
         return point1 + line_vector * t;
     }
 
-    float l_s_intersection(Sphere &s)
+    double l_s_intersection(Sphere &s)
     {
 
-        float i, j, k, u, v, w, a, b, c, r, dois = 2;
+        double i, j, k, u, v, w, a, b, c, r, dois = 2;
 
         a = s.C.getX();
         b = s.C.getY();
@@ -50,18 +50,18 @@ public:
         v = line_vector.getY();
         w = line_vector.getZ();
 
-        float A = u * u + v * v + w * w;
-        float B = dois * (i * u + j * v + k * w - a * i - a * u - b * j - b * v - c * k - c * w);
-        float C = i * i + j * j + k * k + a * a + b * b + c * c - r * r;
+        double A = u * u + v * v + w * w;
+        double B = dois * (i * u + j * v + k * w - a * i - a * u - b * j - b * v - c * k - c * w);
+        double C = i * i + j * j + k * k + a * a + b * b + c * c - r * r;
 
-        float DELTA = B * B - 4 * A * C;
+        double DELTA = B * B - 4 * A * C;
         if (DELTA < 0)
         {
             return -1;
         }
 
-        float t1 = (-1 * B + sqrt(B * B - 4 * A * C)) / (2 * A);
-        float t2 = (-1 * B - sqrt(B * B - 4 * A * C)) / (2 * A);
+        double t1 = (-1 * B + sqrt(B * B - 4 * A * C)) / (2 * A);
+        double t2 = (-1 * B - sqrt(B * B - 4 * A * C)) / (2 * A);
 
         if (t1 >= 0 && t1 <= abs(t2))
         {
@@ -70,9 +70,9 @@ public:
         return t2;
     }
 
-    float l_p_intersection(Plane &p)
+    double l_p_intersection(Plane &p)
     {
-        float x0, y0, z0, a, b, c, i, j, k, u, v, w;
+        double x0, y0, z0, a, b, c, i, j, k, u, v, w;
 
         x0 = p.point.getX();
         y0 = p.point.getY();
@@ -90,7 +90,7 @@ public:
         v = line_vector.getY();
         w = line_vector.getZ();
 
-        float t = -1 * ((a * i + b * j + c * k) + (-a * x0 - b * y0 - c * z0)) / (a * u + b * v + c * w);
+        double t = -1 * ((a * i + b * j + c * k) + (-a * x0 - b * y0 - c * z0)) / (a * u + b * v + c * w);
         return t;
     }
 };

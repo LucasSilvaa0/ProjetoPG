@@ -1,3 +1,4 @@
+
 #ifndef CAMERAHEADER
 #define CAMERAHEADER
 #include "Point.h"
@@ -16,14 +17,14 @@ public:
     Vector3D W, U, V; // Vetores ortonormais
     Point3D centro_tela;
     Point3D primeiro_pixel;
-    float d;   // Distância entre a câmera e a tela
+    double d;   // Distância entre a câmera e a tela
     int h_res; // Altura da tela
     int w_res; // Largura da tela
     Vector3D subir_1;
     Vector3D direita_1;
     Scene *scene_ptr;
 
-    Camera(const Point3D C, const Point3D M, const float d, const int w_res, const int h_res, Scene *scene_ptr)
+    Camera(const Point3D C, const Point3D M, const double d, const int w_res, const int h_res, Scene *scene_ptr)
         : C(C), M(M), d(d), w_res(w_res), h_res(h_res), scene_ptr(scene_ptr)
     {
         updateVectors();
@@ -63,16 +64,14 @@ public:
 
     void render()
     {
-        std::string lucas = "";
+
+        std::cout << "P3\n" << h_res << ' ' << w_res << "\n255\n";
 
         for (int i = 0; i < h_res; i++)
         {
-
             for (int j = 0; j < w_res; j++)
             {
-
                 bool achou = false;
-
                 // std::cout<<i*3+j+1<<'\n';
                 Point3D pixel_que_estamos = primeiro_pixel + (direita_1 * j) + (subir_1 * (-1 * i));
                 // pixel_que_estamos.print();
@@ -81,37 +80,31 @@ public:
 
                 for (Plane plane : scene_ptr->planos)
                 {
-
-                    float t = linha_centro_pixel.l_p_intersection(plane);
-
+                    double t = linha_centro_pixel.l_p_intersection(plane);
                     if (t != -1)
                     {
-                        achou = true;
+                        std::cout << plane.cor.getX()*255 << ' ' << plane.cor.getY()*255 << ' ' << plane.cor.getZ()*255 << '\n';
+                        achou=true; break;
                     }
                 }
 
+                if(!achou){
                 for (Sphere sphere : scene_ptr->esferas)
                 {
-
-                    float t = linha_centro_pixel.l_s_intersection(sphere);
+                    double t = linha_centro_pixel.l_s_intersection(sphere);
 
                     if (t != -1)
                     {
-                        achou = true;
+                        std::cout << sphere.cor.getX()*255 << ' ' << sphere.cor.getY()*255 << ' ' << sphere.cor.getZ()*255 << '\n';
+                        achou = true; break;
                     }
                 }
-                if (achou)
-                {
-                    lucas.push_back('x');
                 }
-                else
-                {
-                    lucas.push_back(' ');
+                if(!achou){
+                    std::cout << 0 << ' ' << 0 << ' '  << 0 << ' '  << '\n';
                 }
             }
-            lucas.push_back('\n');
         }
-        std::cout << lucas;
     }
 
     void updateVectors()
@@ -130,14 +123,14 @@ public:
         Point3D topo_tela = centro_tela + V;
         Point3D esquerda_tela = centro_tela + (U * -1);
 
-        float p_up = (float)1 / float(h_res);
-        float p_dir = (float)1 / float(w_res);
+        double p_up = (double)1 / double(h_res);
+        double p_dir = (double)1 / double(w_res);
 
         subir_1 = V * p_up;
         direita_1 = U * (p_dir);
         Vector3D esquerda_1 = direita_1 * -1;
-        float qtdup = (h_res - 1) / 2;
-        float qtdesq = (w_res - 1) / 2;
+        double qtdup = (h_res - 1) / 2;
+        double qtdesq = (w_res - 1) / 2;
         primeiro_pixel = centro_tela + ((subir_1 * qtdup) + (esquerda_1 * qtdesq));
     }
 

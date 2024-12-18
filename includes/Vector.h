@@ -7,10 +7,10 @@ class Vector3D
 {
 public:
     // Valores
-    float x, y, z;
+    double x, y, z;
 
     // Constructor
-    Vector3D(float x = 0, float y = 0, float z = 0) : x(x), y(y), z(z) {}
+    Vector3D(double x = 0, double y = 0, double z = 0) : x(x), y(y), z(z) {}
 
     // Operações
     Vector3D operator+(const Vector3D &other) const
@@ -23,17 +23,17 @@ public:
         return Vector3D(x - other.x, y - other.y, z - other.z);
     }
 
-    Vector3D operator*(const float scalar)
+    Vector3D operator*(const double scalar)
     {
         return Vector3D(x * scalar, y * scalar, z * scalar);
     }
 
-    float operator%(const Vector3D &other) const
+    double operator%(const Vector3D &other) const
     {
         return (other.x * x + other.y * y + other.z * z);
     }
 
-    float dot(const Vector3D &other) const
+    double dot(const Vector3D &other) const
     {
         return x * other.x + y * other.y + z * other.z;
     }
@@ -46,14 +46,14 @@ public:
             x * other.y - y * other.x);
     }
 
-    float magnitude() const
+    double magnitude() const
     {
         return std::sqrt(x * x + y * y + z * z);
     }
 
     void normalize()
     {
-        float mag = magnitude();
+        double mag = magnitude();
         if (mag > 0)
         {
             x /= mag;
