@@ -1,9 +1,9 @@
 #ifndef CAMERAHEADER
 #define CAMERAHEADER
-#include "Point.cpp"
-#include "Vector.cpp"
-#include "Sphere.cpp"
-#include "Line.cpp"
+#include "Point.h"
+#include "Vector.h"
+#include "Sphere.h"
+#include "Line.h"
 #include <iostream>
 
 class Camera
