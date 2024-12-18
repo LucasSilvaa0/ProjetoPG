@@ -5,18 +5,22 @@
 #include "includes/Sphere.h"
 #include "includes/Line.h"
 #include "includes/Camera.h"
+#include "includes/Scene.h"
 
 int main()
 {
 
-    Camera camera = Camera(Point3D(0,0,0),Point3D(1,0,0),(float)1,(float)1,(float)1);
+    Scene* cena = new Scene();
 
-    std::cout << "U: " << "\n";
-    camera.U.print();
-    std::cout << "V: " << "\n";
-    camera.V.print();
-    std::cout << "W: " << "\n";
-    camera.W.print();
+    Point3D centro = Point3D(200,0,0);
+
+    Sphere palao = Sphere(centro,(float)0.3);
+
+    cena->esferas.push_back(palao);
+
+    Camera camera = Camera(Point3D(0,0,0),Point3D(1,0,0),(float)1,15,60,cena);
+
+    camera.render();
 
     return 0;
 }
