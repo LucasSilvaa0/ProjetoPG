@@ -59,8 +59,6 @@ public:
         float t1 = (-1 * B + sqrt(B * B - 4 * A * C)) / (2 * A);
         float t2 = (-1 * B - sqrt(B * B - 4 * A * C)) / (2 * A);
 
-        std::cout << "t1 = " << t1 << " t2 = " << t2 << std::endl;
-
         if (t1 >= 0 && t1 <= abs(t2))
         {
             return t1;
