@@ -13,7 +13,8 @@ public:
     Vector3D line_vector; // Vetor diretor da reta
     Vector3D cor;
 
-    Line(const Point3D &p1, const Point3D &p2) : point1(p1), line_vector(p2 - p1) {
+    Line(const Point3D &p1, const Point3D &p2) : point1(p1), line_vector(p2 - p1)
+    {
         line_vector.normalize();
     }
 
@@ -52,7 +53,8 @@ public:
         float A = u * u + v * v + w * w, B = dois * (i * u + j * v + k * w - a * i - a * u - b * j - b * v * -c * k - c * w), C = i * i + j * j + k * k + a * a + b * b + c * c - r * r;
 
         float DELTA = B * B - 4 * A * C;
-        if(DELTA<0){
+        if (DELTA < 0)
+        {
             return -1;
         }
 
@@ -61,10 +63,11 @@ public:
 
         if (t1 >= 0 && t1 <= abs(t2))
         {
+            std::cout << "t1: " << t1 << "\n";
             return t1;
         }
+        std::cout << "t2: " << t2 << "\n";
         return t2;
-
     }
 
     float l_p_intersection(Plane &p)
