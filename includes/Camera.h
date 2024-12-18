@@ -26,31 +26,17 @@ public:
     Camera(const Point3D C, const Point3D M, const float d, const int w_res, const int h_res, Scene *scene_ptr)
         : C(C), M(M), d(d), w_res(w_res), h_res(h_res), scene_ptr(scene_ptr)
     {
+        updateVectors();
+    }
 
-        Vup = Vector3D(0, 1, 0);
+    void updateCenter(const Point3D c){
+        C = c;
+        updateVectors();
+    }
 
-        updateOrthonormalVectors();
-
-        W = (C - M);
-        W.normalize();
-        U = W.cross(Vup);
-        U.normalize();
-        V = W.cross(U);
-        V.normalize();
-
-        centro_tela = C + (W * (d * -1));
-        Point3D topo_tela = centro_tela + V;
-        Point3D esquerda_tela = centro_tela + (U * -1);
-
-        float p_up = (float)1 / float(h_res);
-        float p_dir = (float)1 / float(w_res);
-
-        subir_1 = V * p_up;
-        direita_1 = U * (p_dir);
-        Vector3D esquerda_1 = direita_1 * -1;
-        float qtdup = (h_res - 1) / 2;
-        float qtdesq = (w_res - 1) / 2;
-        primeiro_pixel = centro_tela + ((subir_1 * qtdup) + (esquerda_1 * qtdesq));
+    void updateAim(const Point3D m){
+        M = m;
+        updateVectors();
     }
 
     std::tuple<Vector3D, Vector3D, Vector3D> gramSchmidt(Vector3D &v1)
@@ -77,15 +63,18 @@ public:
     {
         std::string lucas = "";
 
-        for (int i = 0; i < w_res; i++)
+        for (int i = 0; i < h_res; i++)
         {
 
-            for (int j = 0; j < h_res; j++)
+            for (int j = 0; j < w_res; j++)
             {
 
                 bool achou = false;
 
-                Point3D pixel_que_estamos = primeiro_pixel + ((direita_1 * i) + (subir_1 * (j * -1)));
+                //std::cout<<i*3+j+1<<'\n';
+                Point3D pixel_que_estamos = primeiro_pixel + (direita_1*j) + (subir_1*(-1*i));
+                //pixel_que_estamos.print();        
+
                 Line linha_centro_pixel = Line(C, pixel_que_estamos);
 
                 for (Plane plane : scene_ptr->planos)
@@ -123,13 +112,32 @@ public:
         std::cout << lucas;
     }
 
-    void updateOrthonormalVectors()
+    void updateVectors()
     {
-        W = C - M;
+
+        Vup = Vector3D(0,1,0);
+        W = (M-C);
         W.normalize();
-        U = Vup.cross(W);
+        U = W.cross(Vup);
         U.normalize();
-        V = W.cross(U);
+        V = U.cross(W);
+        V.normalize();
+        W = W*-1;
+
+        centro_tela = C + (W * (d * -1));
+        Point3D topo_tela = centro_tela + V;
+        Point3D esquerda_tela = centro_tela + (U * -1);
+
+        float p_up = (float)1 / float(h_res);
+        float p_dir = (float)1 / float(w_res);
+
+        subir_1 = V * p_up;
+        direita_1 = U * (p_dir);
+        Vector3D esquerda_1 = direita_1 * -1;
+        float qtdup = (h_res - 1) / 2;
+        float qtdesq = (w_res - 1) / 2;
+        primeiro_pixel = centro_tela + ((subir_1 * qtdup) + (esquerda_1 * qtdesq));
+
     }
 
     void print() const

@@ -27,7 +27,7 @@ public:
     // Print
     void print() const
     {
-        std::cout << "Point3D(" << x << ", " << y << ", " << z << ")\n";
+        std::cout << "Point({" << x << ", " << y << ", " << z << "})\n";
     }
 
     // Getters
