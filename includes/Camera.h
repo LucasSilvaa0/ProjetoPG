@@ -17,10 +17,40 @@ public:
     int v_res;        // Altura da tela
     int h_res;        // Largura da tela
 
-    Camera(Point3D C, Point3D M, Vector3D Vup, float d, int v_res, int h_res)
-        : C(C), M(M), Vup(Vup), d(d), v_res(v_res), h_res(h_res)
+    Camera(const Point3D C, const Point3D M, const float d, const int v_res, const int h_res)
+        : C(C), M(M), d(d), v_res(v_res), h_res(h_res)
     {
         updateOrthonormalVectors();
+        
+        auto temp = M-C; temp = temp*(float)-1;
+        
+        
+
+        auto [W,U,V] = gramSchmidt(temp);
+
+        Vup = Vector3D(0,1,0);
+
+    }
+
+    std::tuple<Vector3D,Vector3D,Vector3D> gramSchmidt(Vector3D& v1){
+    
+        Vector3D u1 = v1;
+
+        u1.normalize();
+
+
+        Vector3D arbitraryVector = (u1.x != 0 || u1.y == 0) ? Vector3D(0, 1, 0) : Vector3D(1, 0, 0);
+
+        Vector3D u2 = arbitraryVector - u1 * (arbitraryVector.dot(u1));
+
+        u2.normalize();
+
+        Vector3D u3 = u1.cross(u2);
+
+        u3.normalize();
+
+        return {u1,u2,u3};
+    
     }
 
     void updateOrthonormalVectors()
