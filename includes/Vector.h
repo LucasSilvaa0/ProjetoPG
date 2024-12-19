@@ -38,6 +38,12 @@ public:
         return x * other.x + y * other.y + z * other.z;
     }
 
+    float cos(const Vector3D &other) const {
+
+        return (other%(*this))/(this->magnitude()*other.magnitude());
+
+    }
+
     Vector3D cross(const Vector3D &other) const
     {
         return Vector3D(

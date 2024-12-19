@@ -42,24 +42,46 @@ public:
         updateVectors();
     }
 
-    std::tuple<Vector3D, Vector3D, Vector3D> gramSchmidt(Vector3D &v1)
-    {
+    std::pair<Vector3D, double> raycolor(Line& ray){
 
-        Vector3D u1 = v1;
+            double min_t = INFINITY;
+            Vector3D color;
 
-        u1.normalize();
+            auto a = 0.5*(ray.line_vector.getY() + 1.0);
+            color = Vector3D(1.0, 1.0, 1.0)*(1.0-a) + Vector3D(0.5, 0.7, 1.0)*a;
 
-        Vector3D arbitraryVector = (u1.x != 0 || u1.y == 0) ? Vector3D(0, 1, 0) : Vector3D(1, 0, 0);
 
-        Vector3D u2 = arbitraryVector - u1 * (arbitraryVector.dot(u1));
+            for (Plane plane : scene_ptr->planos){
 
-        u2.normalize();
+                double t = ray.l_p_intersection(plane);
 
-        Vector3D u3 = u1.cross(u2);
+                if (t != -1){
+                       if(t<min_t){
+                        
+                        
+                        min_t = t;
+                        color = plane.cor;
 
-        u3.normalize();
+                       }
+                    }
+                }
 
-        return {u1, u2, u3};
+            for (Sphere sphere : scene_ptr->esferas)
+            {
+                    double t = ray.l_s_intersection(sphere);
+
+                    if (t != -1){
+                       if(t<min_t){
+
+                        Vector3D N = ray.at(t) - sphere.C; N.normalize();
+                        min_t = t;
+                        float degrade = 1-sqrt((1+N.cos(ray.line_vector))/2);
+                        color = sphere.cor*degrade;
+
+                       }
+                    }
+                }  
+            return {color,min_t};          
     }
 
     void render()
@@ -71,38 +93,18 @@ public:
         {
             for (int j = 0; j < w_res; j++)
             {
-                bool achou = false;
-                // std::cout<<i*3+j+1<<'\n';
                 Point3D pixel_que_estamos = primeiro_pixel + (direita_1 * j) + (subir_1 * (-1 * i));
-                // pixel_que_estamos.print();
 
                 Line linha_centro_pixel = Line(C, pixel_que_estamos);
 
-                for (Plane plane : scene_ptr->planos)
-                {
-                    double t = linha_centro_pixel.l_p_intersection(plane);
-                    if (t != -1)
-                    {
-                        std::cout << plane.cor.getX()*255 << ' ' << plane.cor.getY()*255 << ' ' << plane.cor.getZ()*255 << '\n';
-                        achou=true; break;
-                    }
-                }
+                Vector3D cor_do_pixel; float t;
 
-                if(!achou){
-                for (Sphere sphere : scene_ptr->esferas)
-                {
-                    double t = linha_centro_pixel.l_s_intersection(sphere);
+                auto temp = raycolor(linha_centro_pixel);
+                
+                cor_do_pixel = temp.first; t = temp.second;
+               
+                std::cout << cor_do_pixel.getX()*255 << " " << cor_do_pixel.getY()*255 << " " << cor_do_pixel.getZ()*255 << '\n';
 
-                    if (t != -1)
-                    {
-                        std::cout << sphere.cor.getX()*255 << ' ' << sphere.cor.getY()*255 << ' ' << sphere.cor.getZ()*255 << '\n';
-                        achou = true; break;
-                    }
-                }
-                }
-                if(!achou){
-                    std::cout << 0 << ' ' << 0 << ' '  << 0 << ' '  << '\n';
-                }
             }
         }
     }
