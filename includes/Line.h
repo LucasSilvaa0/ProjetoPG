@@ -80,7 +80,7 @@ public:
 
         a = p.normal.getX();
         b = p.normal.getY();
-        a = p.normal.getZ();
+        c = p.normal.getZ();
 
         i = point1.getX();
         j = point1.getY();
