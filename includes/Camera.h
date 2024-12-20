@@ -47,9 +47,12 @@ public:
             double min_t = INFINITY;
             Vector3D color;
 
+            // interpolação do background, só pra ficar bonito mesmo
+
             auto a = 0.5*(ray.line_vector.getY() + 1.0);
             color = Vector3D(1.0, 1.0, 1.0)*(1.0-a) + Vector3D(0.5, 0.7, 1.0)*a;
 
+            // fazemos a checagem de interseção com cada tipo de objeto na cena
 
             for (Plane plane : scene_ptr->planos){
 
@@ -57,7 +60,6 @@ public:
 
                 if (t != -1){
                        if(t<min_t){
-                        
                         
                         min_t = t;
                         color = plane.cor;
@@ -73,6 +75,16 @@ public:
                     if (t != -1){
                        if(t<min_t){
 
+                        /*
+
+                            muita coisa acontece aqui, vamos por partes:
+
+                            Lambert's cosine law diz que a luz que reflete de um objeto é inversamente proporcional ao angulo entre a normal do objeto e raio
+                            Aqui, calculamos a normal da bola e o cosseno do angulo de incidencia com a normal
+                            Pra deixar a transição da cor mais "smooth", a cor foi multiplicada pelo cosseno da metade do angulo
+                            Cos(x/2) = 1-sqrt((1+cos(x))/2)
+                        
+                        */
                         Vector3D N = ray.at(t) - sphere.C; N.normalize();
                         min_t = t;
                         float degrade = 1-sqrt((1+N.cos(ray.line_vector))/2);
@@ -81,28 +93,49 @@ public:
                        }
                     }
                 }  
+
+            // retorna a cor e o t
+            
             return {color,min_t};          
     }
 
     void render()
     {
 
+        // header do ppm
         std::cout << "P3\n" << h_res << ' ' << w_res << "\n255\n";
 
+
+        // para cada linha de pixels
         for (int i = 0; i < h_res; i++)
         {
+
+            // para cada pixel da linha
             for (int j = 0; j < w_res; j++)
             {
+
+                /* 
+                    pegamos o primeiro pixel, somamos com quantas vezes queremos ir pra direita + quantas vezes queremos ir pra baixo
+                    isto é, P11 + direita*j + up*-i = P(i-1)(j-1)
+                    note que como (i,j) começa como (0,0), o primeiro pixel tá contado 
+                */
+
                 Point3D pixel_que_estamos = primeiro_pixel + (direita_1 * j) + (subir_1 * (-1 * i));
+
+                // formamos o raio que parte do centro da camera e vai pro pixel
 
                 Line linha_centro_pixel = Line(C, pixel_que_estamos);
 
                 Vector3D cor_do_pixel; float t;
 
+                // pegamos a cor do pixel do objeto que intersecta mais perto (retorna um par (cor, t))
+
                 auto temp = raycolor(linha_centro_pixel);
-                
+
                 cor_do_pixel = temp.first; t = temp.second;
                
+                // manda pro ppm
+
                 std::cout << cor_do_pixel.getX()*255 << " " << cor_do_pixel.getY()*255 << " " << cor_do_pixel.getZ()*255 << '\n';
 
             }
@@ -112,6 +145,7 @@ public:
     void updateVectors()
     {
 
+        // Cria a base + up vector
         Vup = Vector3D(0, 1, 0);
         W = (M - C);
         W.normalize();
@@ -121,6 +155,7 @@ public:
         V.normalize();
         W = W * -1;
 
+        // Calcula a tela com os pixels
         centro_tela = C + (W * (d * -1));
         Point3D topo_tela = centro_tela + V;
         Point3D esquerda_tela = centro_tela + (U * -1);
