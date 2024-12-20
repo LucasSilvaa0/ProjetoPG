@@ -21,7 +21,7 @@ int main()
 
     Camera camera = Camera(Point3D(0, 0, 0), Point3D(1, 0, 0), (double)2, 10, 10, cena);
 
-    camera.render();
+    camera.render("esfera.ppm");
 
     return 0;
 }

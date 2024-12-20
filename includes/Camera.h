@@ -7,6 +7,7 @@
 #include "Line.h"
 #include "Scene.h"
 #include <iostream>
+#include <fstream>
 
 class Camera
 {
@@ -99,11 +100,12 @@ public:
             return {color,min_t};          
     }
 
-    void render()
+    void render(const std:: string& filename)
     {
 
+        std::ofstream file(filename, std::ios::out | std::ios::trunc);
         // header do ppm
-        std::cout << "P3\n" << h_res << ' ' << w_res << "\n255\n";
+        file << "P3\n" << h_res << ' ' << w_res << "\n255\n";
 
 
         // para cada linha de pixels
@@ -136,7 +138,7 @@ public:
                
                 // manda pro ppm
 
-                std::cout << cor_do_pixel.getX()*255 << " " << cor_do_pixel.getY()*255 << " " << cor_do_pixel.getZ()*255 << '\n';
+                file << cor_do_pixel.getX()*255 << " " << cor_do_pixel.getY()*255 << " " << cor_do_pixel.getZ()*255 << '\n';
 
             }
         }

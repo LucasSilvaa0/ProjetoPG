@@ -13,7 +13,7 @@ int main()
     Scene *cena = new Scene();
 
 
-    Point3D centro3 = Point3D(7, 0, 0);
+    Point3D centro3 = Point3D(8, 0, 0);
 
     Point3D centro1 = Point3D(8, 0, 0);
     Vector3D ryei = Vector3D(-1,0,0);
@@ -26,7 +26,7 @@ int main()
 
     Camera camera = Camera(Point3D(0, 0, 0), Point3D(1, 0, 0), (double)2, 10, 10, cena);
 
-    camera.render();
+    camera.render("plano.ppm");
 
     return 0;
 }
