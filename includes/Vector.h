@@ -28,20 +28,15 @@ public:
         return Vector3D(x * scalar, y * scalar, z * scalar);
     }
 
-    double operator%(const Vector3D &other) const
-    {
-        return (other.x * x + other.y * y + other.z * z);
-    }
-
     double dot(const Vector3D &other) const
     {
         return x * other.x + y * other.y + z * other.z;
     }
 
-    float cos(const Vector3D &other) const {
+    float cos(const Vector3D &other) const
+    {
 
-        return (other%(*this))/(this->magnitude()*other.magnitude());
-
+        return (other.dot(*this)) / (this->magnitude() * other.magnitude());
     }
 
     Vector3D cross(const Vector3D &other) const
