@@ -283,7 +283,7 @@ public:
         double centro_y = soma_y / vertices.size();
         double centro_z = soma_z / vertices.size();
 
-        if (centro_x != 0 || centro_y == 0 || centro_z == 0)
+        if (centro_x != 0 || centro_y != 0 || centro_z != 0)
         {
             this->transladar(-centro_x, -centro_y, -centro_z);
         }
@@ -306,7 +306,7 @@ public:
             vertices[i] = r * vertices[i];
         }
 
-        if (centro_x != 0 || centro_y == 0 || centro_z == 0)
+        if (centro_x != 0 || centro_y != 0 || centro_z != 0)
         {
             this->transladar(centro_x, centro_y, centro_z);
         }

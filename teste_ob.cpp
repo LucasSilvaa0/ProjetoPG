@@ -16,7 +16,7 @@ int main()
     objReader obj("input/cubo.obj");
 
     obj.transladar(0, 2, 2);
-    // obj.rotacionar(0.5, 'z');
+    obj.rotacionar(0.78, 'x');
 
     cena->addObj(obj);
 
