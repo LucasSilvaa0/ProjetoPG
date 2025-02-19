@@ -19,6 +19,8 @@ int main()
     Point3D point = Point3D(200, 0, 0);
     Vector3D normal = Vector3D(-1, 0, 0);
 
+    
+
     cena->esferas.push_back(palao1);
 
     Camera camera = Camera(Point3D(0, 0, 0), Point3D(1, 0, 0), (double)5, 1000, 1000, cena);
