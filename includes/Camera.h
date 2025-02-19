@@ -95,6 +95,21 @@ public:
                     }
                 }  
 
+            for (Triangle triangulo : scene_ptr->triangulos)
+            {
+                        double t = ray.l_t_intersection(triangulo);
+    
+                        if (t != -1){
+                           if(t<min_t){
+    
+                            //Vector3D N = triangulo.NormalVector();
+                            min_t = t;
+                            //float degrade = 1-sqrt((1+N.cos(ray.line_vector))/2);
+                            color = triangulo.cor;
+    
+                           }
+                        }
+                    }     
             // retorna a cor e o t
             
             return {color,min_t};          

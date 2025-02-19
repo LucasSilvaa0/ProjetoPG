@@ -5,6 +5,7 @@
 #include "Sphere.h"
 #include "Vector.h"
 #include "Point.h"
+#include "Triangle.h"
 #include <vector>
 #include <map>
 
@@ -17,6 +18,7 @@ public:
     std::map<Point3D,int> qtd_average_ponto;
     std::vector<Plane> planos;
     std::vector<Sphere> esferas;
+    std::vector<Triangle> triangulos;
 };
 
 #endif
