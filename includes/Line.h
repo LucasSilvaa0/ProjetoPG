@@ -5,6 +5,7 @@
 #include "Vector.h"
 #include "Sphere.h"
 #include "Plane.h"
+#include "Triangle.h"
 
 class Line
 {
@@ -93,6 +94,48 @@ public:
         double t = -1 * ((a * i + b * j + c * k) + (-a * x0 - b * y0 - c * z0)) / (a * u + b * v + c * w);
         return t;
     }
+
+    double l_t_intersection(Triangle &tr)
+    {
+        Point3D v0 = tr.v0;
+        Point3D v1 = tr.v1;
+        Point3D v2 = tr.v2;
+
+        const double EPSILON = 0.00000000001;
+
+        Vector3D edge1 = v1 - v0;
+        Vector3D edge2 = v2 - v0;
+        Vector3D h = line_vector.cross(edge2);
+        double a = edge1.dot(h);
+
+        if (a > -EPSILON && a < EPSILON) {
+            return -1;
+        }
+
+        double f = 1.0 / a;
+        Vector3D s = point1 - v0;
+        double u = f * s.dot(h);
+
+        if (u < 0.0 || u > 1.0) {
+            return -1; 
+        }
+
+        Vector3D q = s.cross(edge1);
+        double v = f * line_vector.dot(q);
+
+        if (v < 0.0 || u + v > 1.0) {
+            return -1; 
+        }
+
+        double t = f * edge2.dot(q);
+
+        if (t > EPSILON) {
+            return t; 
+        } else {
+            return -1;
+        }
+    }
+
 };
 
 #endif
