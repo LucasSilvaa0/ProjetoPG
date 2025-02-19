@@ -2,8 +2,8 @@
 #define OBJREADERHEADER
 
 /*
-Classe leitora de arquivos .obj. Onde o arquivo contém os vários pontos, normais e faces do objeto. No projeto 
-trabalhamos com faces triangulares, ou seja, uma face consiste em 3 pontos. 
+Classe leitora de arquivos .obj. Onde o arquivo contém os vários pontos, normais e faces do objeto. No projeto
+trabalhamos com faces triangulares, ou seja, uma face consiste em 3 pontos.
 
 No arquivo .obj, temos:
     - v = pontos
@@ -17,7 +17,7 @@ Nessa classe podem ser obtidas as seguintes informações (por meio dos Getters)
     - Lista de faces com seus respectivos pontos
     - Informações de cor, brilho, opacidade, etc.
 
-Obs: -  Para fins de abstração, as normais de cada ponto são ignoradas e assumimos apenas uma normal para cada face. 
+Obs: -  Para fins de abstração, as normais de cada ponto são ignoradas e assumimos apenas uma normal para cada face.
      -  As texturas também são ignoradas.
 
 Caso sintam necessidade, podem editar a classe para obter mais informações.
@@ -36,8 +36,10 @@ Caso sintam necessidade, podem editar a classe para obter mais informações.
 #include "includes/Colormap.h"
 #include "includes/Malha.h"
 #include "includes/Matrix.h"
+#include "includes/Triangle.h"
 
-struct Face {
+struct Face
+{
     int verticeIndice[3];
     int normalIndice[3];
     vetor ka;
@@ -48,8 +50,10 @@ struct Face {
     double ni;
     double d;
 
-    Face() {
-        for (int i = 0; i < 3; ++i) {
+    Face()
+    {
+        for (int i = 0; i < 3; ++i)
+        {
             verticeIndice[i] = 0;
             normalIndice[i] = 0;
         }
@@ -63,7 +67,8 @@ struct Face {
     }
 };
 
-class objReader {
+class objReader
+{
 
 private:
     std::ifstream file;                         // Arquivo .obj
@@ -75,41 +80,54 @@ private:
     colormap cmap;                              // Objeto de leitura de arquivos .mtl
 
 public:
-    objReader(std::string filename) : cmap(cmap) {
+    objReader(std::string filename) : cmap(cmap)
+    {
 
         // Abre o arquivo
         file.open(filename);
-        if (!file.is_open()) {
+        if (!file.is_open())
+        {
             std::cerr << "Erro ao abrir o arquivo: " << filename << std::endl;
             return;
         }
 
         // Leitura do arquivo
         std::string line, mtlfile, colorname, filename_mtl;
-        while (std::getline(file, line)) {
+        while (std::getline(file, line))
+        {
             std::istringstream iss(line);
             std::string prefix;
             iss >> prefix;
 
-            if (prefix == "mtllib") {
+            if (prefix == "mtllib")
+            {
                 iss >> filename_mtl;
                 std::string filename_mtl_path = filename.replace(filename.length() - 3, 3, "mtl");
                 cmap = colormap(filename_mtl_path);
-            } else if (prefix == "usemtl") {
+            }
+            else if (prefix == "usemtl")
+            {
                 iss >> colorname;
                 curMaterial = cmap.getMaterialProperties(colorname);
-            } else if (prefix == "v") {
+            }
+            else if (prefix == "v")
+            {
                 double x, y, z;
                 iss >> x >> y >> z;
                 vertices.emplace_back(x, y, z);
-            } else if (prefix == "vn") {
+            }
+            else if (prefix == "vn")
+            {
                 double x, y, z;
                 iss >> x >> y >> z;
                 normals.emplace_back(x, y, z);
-            } else if (prefix == "f") {
+            }
+            else if (prefix == "f")
+            {
                 Face face;
                 char slash;
-                for (int i = 0; i < 3; ++i) {
+                for (int i = 0; i < 3; ++i)
+                {
                     int _;
                     iss >> face.verticeIndice[i] >> slash >> _ >> slash >> face.normalIndice[i];
                     face.ka = curMaterial.ka;
@@ -124,14 +142,13 @@ public:
                 }
                 faces.push_back(face);
             }
-
         }
-        for (const auto& face : faces) {
+        for (const auto &face : faces)
+        {
             std::vector<point> points = {
                 vertices[face.verticeIndice[0]],
                 vertices[face.verticeIndice[1]],
-                vertices[face.verticeIndice[2]]
-            };
+                vertices[face.verticeIndice[2]]};
             facePoints.push_back(points);
         }
 
@@ -141,7 +158,8 @@ public:
     // Getters
 
     // Método para retornar as coordenadas dos pontos das faces
-    std::vector<std::vector<point>> getFacePoints() {
+    std::vector<std::vector<point>> getFacePoints()
+    {
         return facePoints;
     }
 
@@ -154,67 +172,79 @@ public:
         - Índice de refração (ni)
         - Opacidade (d)
     */
-    std::vector<Face> getFaces() {
+    std::vector<Face> getFaces()
+    {
         return faces;
     }
 
     // Método para retornar a cor do material (Coeficiente de difusão)
-    vetor getKd() {
+    vetor getKd()
+    {
         return curMaterial.kd;
     }
 
     // Método para retornar a cor do ambiente
-    vetor getKa() {
+    vetor getKa()
+    {
         return curMaterial.ka;
     }
 
     // Método para retornar o coeficiente especular (Refletência)
-    vetor getKe() {
+    vetor getKe()
+    {
         return curMaterial.ke;
     }
 
     // Método para retornar o coeficiente de brilho
-    double getNs() {
+    double getNs()
+    {
         return curMaterial.ns;
     }
 
     // Método para retornar o índice de refração
-    double getNi() {
+    double getNi()
+    {
         return curMaterial.ni;
     }
 
     // Método para retornar o coeficiente de especularidade
-    vetor getKs() {
+    vetor getKs()
+    {
         return curMaterial.ks;
     }
 
     // Método para retornar o indice de opacidade
-    double getD() {
+    double getD()
+    {
         return curMaterial.d;
     }
 
     // Método para retornar as coordenadas dos pontos
-    std::vector<point> getVertices() {
+    std::vector<point> getVertices()
+    {
         return vertices;
     }
 
-
     // Emite um output no terminal para cada face, com seus respectivos pontos (x, y, z)
-    void print_faces() {
+    void print_faces()
+    {
         int i = 0;
-        for (const auto& face : facePoints) {
+        for (const auto &face : facePoints)
+        {
             i++;
             std::clog << "Face " << i << ": ";
-            for (const auto& point : face) {
+            for (const auto &point : face)
+            {
                 std::cout << "(" << point.getX() << ", " << point.getY() << ", " << point.getZ() << ")";
             }
             std::clog << std::endl;
         }
     }
 
-    Triangle faceToTriangulo(Face& face){
+    Triangle faceToTriangulo(Face &face)
+    {
         auto ryei = face.kd;
-        //std::cout<<ryei.x<<" "<<ryei.y<<" "<<ryei.z<<endl;
+        // std::cout<<ryei.x<<" "<<ryei.y<<" "<<ryei.z<<endl;
         return Triangle(
             vertices[face.verticeIndice[0]],
             vertices[face.verticeIndice[1]],
@@ -224,22 +254,63 @@ public:
             normals[face.normalIndice[2]],
             ryei.x,
             ryei.y,
-            ryei.z
-        );
+            ryei.z);
     }
 
-    void transladar(int x, int y, int z){
-        
-        auto matrix = Matrix4x4().translation(x,y,z);
+    void transladar(int x, int y, int z)
+    {
 
-        for(int i = 0; i < vertices.size(); i++){
-            vertices[i] = matrix*vertices[i];
+        auto matrix = Matrix4x4().translation(x, y, z);
+
+        for (int i = 0; i < vertices.size(); i++)
+        {
+            vertices[i] = matrix * vertices[i];
+        }
+    }
+
+    void rotacionar(double angle, char axis)
+    {
+        double soma_x = 0;
+        double soma_y = 0;
+        double soma_z = 0;
+        for (int i = 0; i < vertices.size(); i++)
+        {
+            soma_x += vertices[i].getX();
+            soma_y += vertices[i].getY();
+            soma_z += vertices[i].getZ();
+        }
+        double centro_x = soma_x / vertices.size();
+        double centro_y = soma_y / vertices.size();
+        double centro_z = soma_z / vertices.size();
+
+        if (centro_x != 0 || centro_y == 0 || centro_z == 0)
+        {
+            this->transladar(-centro_x, -centro_y, -centro_z);
         }
 
+        Matrix4x4 r; // rotaciona
+        if (axis == 'x')
+        {
+            r = Matrix4x4().rotationX(angle);
+        }
+        else if (axis == 'y')
+        {
+            r = Matrix4x4().rotationY(angle);
+        }
+        else if (axis == 'z')
+        {
+            r = Matrix4x4().rotationZ(angle);
+        }
+        for (int i = 0; i < vertices.size(); i++)
+        {
+            vertices[i] = r * vertices[i];
+        }
+
+        if (centro_x != 0 || centro_y == 0 || centro_z == 0)
+        {
+            this->transladar(centro_x, centro_y, centro_z);
+        }
     }
-
-    
-
 };
 
 #endif

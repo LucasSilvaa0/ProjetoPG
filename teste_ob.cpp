@@ -15,12 +15,10 @@ int main()
 
     objReader obj("input/cubo.obj");
 
-    obj.transladar(0,2,2);
+    obj.transladar(0, 2, 2);
+    // obj.rotacionar(0.5, 'z');
 
     cena->addObj(obj);
-
-
-    //obj.print_faces();
 
     Camera camera = Camera(Point3D(-10, 0, 0), Point3D(1, 0, 0), (double)1, 500, 500, cena);
 
