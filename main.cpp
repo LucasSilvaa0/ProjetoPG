@@ -24,7 +24,7 @@ int main()
 
     cena->esferas.push_back(palao1);
 
-    cena->triangulos.push_back(palao2);
+   
     //cena->esferas.push_back(palao1);
 
     Camera camera = Camera(Point3D(0, 0, 0), Point3D(1, 0, 0), (double)4, 500, 500, cena);
