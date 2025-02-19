@@ -6,7 +6,7 @@
 #include "includes/Line.h"
 #include "includes/Camera.h"
 #include "includes/Scene.h"
-#include "objreader.cpp"
+#include "objetificador.cpp"
 
 int main()
 {
@@ -15,8 +15,14 @@ int main()
 
     objReader obj("input/cubo.obj");
 
+    obj.transladar(0,2,2);
 
-    Camera camera = Camera(Point3D(0, 0, 0), Point3D(1, 0, 0), (double)4, 500, 500, cena);
+    cena->addObj(obj);
+
+
+    //obj.print_faces();
+
+    Camera camera = Camera(Point3D(-10, 0, 0), Point3D(1, 0, 0), (double)1, 500, 500, cena);
 
     camera.render("palao.ppm");
 

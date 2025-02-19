@@ -95,7 +95,7 @@ public:
                     }
                 }  
             
-            for (Malha malha : scene_ptr->malhas)
+            /*for (Malha malha : scene_ptr->malhas)
             {
                 for (Triangle triangulo : malha.triangulos)
                 {
@@ -114,7 +114,7 @@ public:
                             }
 
                 }
-            }
+            }*/
             
             for (Triangle triangulo : scene_ptr->triangulos)
             {

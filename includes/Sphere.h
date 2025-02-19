@@ -13,7 +13,6 @@ public:
 
     Sphere(Point3D &centro, double raio, int R, int G, int B) : C(centro), r(raio)
     {
-
         cor = Vector3D(R / (double)255, G / (double)255, B / (double)255);
     }
 

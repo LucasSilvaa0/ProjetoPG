@@ -10,12 +10,13 @@ class Triangle
 public:
     Point3D v0, v1, v2; // Vértices do triângulo
     Vector3D cor;        // Cor do triângulo (RGB normalizado)
+    Vector3D normal_v0, normal_v1, normal_v2;
 
     // Construtor
-    Triangle(Point3D &vertice0, Point3D &vertice1, Point3D &vertice2, int R, int G, int B)
-        : v0(vertice0), v1(vertice1), v2(vertice2)
+    Triangle(Point3D &vertice0, Point3D &vertice1, Point3D &vertice2, Vector3D& normal1, Vector3D& normal2, Vector3D& normal3, double R, double G, double B)
+        : v0(vertice0), v1(vertice1), v2(vertice2), normal_v0(normal1), normal_v1(normal2), normal_v2(normal3)
     {
-        cor = Vector3D(R / (double)255, G / (double)255, B / (double)255);
+        cor = Vector3D(R, G, B);
     }
 
     // Calcula o vetor normal do triângulo
