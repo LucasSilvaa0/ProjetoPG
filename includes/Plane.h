@@ -15,7 +15,7 @@ public:
     Plane(Point3D point, Vector3D normal, int R, int G, int B) : point(point), normal(normal)
     {
         this->normal.normalize();
-        cor = Vector3D(R/(double)255, G/(double)255, B/(double)255);
+        cor = Vector3D(R / (double)255, G / (double)255, B / (double)255);
     }
 
     void print() const
@@ -25,6 +25,13 @@ public:
         point.print();
         std::cout << "  Normal Vector: ";
         normal.print();
+    }
+
+    void transladar(double x, double y, double z)
+    {
+        point.x += x;
+        point.y += y;
+        point.z += z;
     }
 };
 
