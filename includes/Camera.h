@@ -136,9 +136,9 @@ public:
             return {color,min_t};          
     }
 
-    void render(const std:: string& filename)
+    std::vector<Point3D> render(const std:: string& filename)
     {
-
+        std::vector<Point3D>retornar;
         std::ofstream file(filename, std::ios::out | std::ios::trunc);
         // header do ppm
         file << "P3\n" << h_res << ' ' << w_res << "\n255\n";
@@ -174,9 +174,10 @@ public:
                
                 // manda pro ppm
 
-                file << cor_do_pixel.getX()*255 << " " << cor_do_pixel.getY()*255 << " " << cor_do_pixel.getZ()*255 << '\n';
+                retornar.push_back(Point3D(cor_do_pixel.getX()*255, cor_do_pixel.getY()*255, cor_do_pixel.getZ()*255));
 
             }
+            return retornar;
         }
     }
 
