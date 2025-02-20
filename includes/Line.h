@@ -35,43 +35,16 @@ public:
 
     double l_s_intersection(Sphere &s)
     {
-
-        double i, j, k, u, v, w, a, b, c, r, dois = 2;
-
-        a = s.C.getX();
-        b = s.C.getY();
-        c = s.C.getZ();
-        r = s.r;
-
-        i = point1.getX();
-        j = point1.getY();
-        k = point1.getZ();
-
-        u = line_vector.getX();
-        v = line_vector.getY();
-        w = line_vector.getZ();
-
-        double A = u * u + v * v + w * w;
-        double B = dois * (i * u + j * v + k * w - a * i - a * u - b * j - b * v - c * k - c * w);
-        double C = i * i + j * j + k * k + a * a + b * b + c * c - r * r;
-
-        double DELTA = B * B - 4 * A * C;
-        if (DELTA < 0)
-        {
-            return -1;
+        Vector3D oc = s.C - point1;
+        auto a = line_vector.dot(line_vector);
+        auto h = line_vector.dot(oc);
+        auto c = oc.dot(oc) - s.r*s.r;
+        auto discriminant = h*h - a*c;
+        if(discriminant<0){
+            return -1.0;
+        }else{
+            return (h-std::sqrt(discriminant))/a;
         }
-
-        double t1 = (-1 * B + sqrt(B * B - 4 * A * C)) / (2 * A);
-        double t2 = (-1 * B - sqrt(B * B - 4 * A * C)) / (2 * A);
-
-        if (u == 1 && v == 0 && w == 0)
-            std::cout << this->at(t1).getX() << " " << this->at(t1).getY() << " " << this->at(t1).getZ() << "\n";
-
-        if (t1 >= 0 && t1 <= abs(t2))
-        {
-            return t1;
-        }
-        return t2;
     }
 
     double l_p_intersection(Plane &p)

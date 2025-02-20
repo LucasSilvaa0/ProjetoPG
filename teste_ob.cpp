@@ -22,16 +22,13 @@ int main()
     Point3D pc = Point3D(0, 0, 0);
     Sphere *esfera = new Sphere(pc, 1, 0, 255, 0);
     cena->esferas.push_back(esfera);
-    std::cout << esfera->C.getX() << " " << esfera->C.getY() << " " << esfera->C.getZ() << " " << esfera->r << " " << cena->esferas.size() << "\n";
 
     auto antes = camera.render(cena);
     Renderer windowA = Renderer(800, 600, antes); // ANTES
 
-    esfera->transladar(0.001, 0, 0);
+    esfera->transladar(1, 0, 0);
     obj->refletir('x');
     obj->transladar(0.005, 0, 0);
-
-    std::cout << esfera->C.getX() << " " << esfera->C.getY() << " " << esfera->C.getZ() << " " << esfera->r << " " << cena->esferas.size() << "\n";
 
     auto depois = camera.render(cena);
     Renderer windowD = Renderer(800, 600, depois); // DEPOIS
