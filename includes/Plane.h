@@ -4,6 +4,7 @@
 #include <iostream>
 #include "Point.h"
 #include "Vector.h"
+#include "Matrix.h"
 
 class Plane
 {
@@ -32,6 +33,26 @@ public:
         point.x += x;
         point.y += y;
         point.z += z;
+    }
+
+    void rotacionar(double angle, char axis)
+    {
+        Matrix4x4 r;
+
+        if (axis == 'x')
+        {
+            r = Matrix4x4().rotationX(angle);
+        }
+        else if (axis == 'y')
+        {
+            r = Matrix4x4().rotationY(angle);
+        }
+        else if (axis == 'z')
+        {
+            r = Matrix4x4().rotationZ(angle);
+        }
+
+        normal = r * normal;
     }
 };
 
