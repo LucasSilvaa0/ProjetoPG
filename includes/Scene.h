@@ -6,7 +6,7 @@
 #include "Vector.h"
 #include "Point.h"
 #include "Triangle.h"
-#include "../objetificador.cpp"
+#include "objetificador.h"
 #include <vector>
 #include <map>
 
