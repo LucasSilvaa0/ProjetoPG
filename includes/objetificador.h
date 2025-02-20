@@ -285,7 +285,7 @@ public:
 
         if (centro_x != 0 || centro_y != 0 || centro_z != 0)
         {
-            this->transladar(-centro_x, -centro_y, -centro_z);
+            this->transladar(-centro_x, -centro_y, -centro_z); // translada para a origem (0,0,0)
         }
 
         Matrix4x4 r; // rotaciona
@@ -308,7 +308,28 @@ public:
 
         if (centro_x != 0 || centro_y != 0 || centro_z != 0)
         {
-            this->transladar(centro_x, centro_y, centro_z);
+            this->transladar(centro_x, centro_y, centro_z); // translada de volta para a posição do objeto
+        }
+    }
+
+    void refletir(char axis)
+    {
+        Matrix4x4 r; // reflete
+        if (axis == 'x')
+        {
+            r = Matrix4x4().reflectionX();
+        }
+        else if (axis == 'y')
+        {
+            r = Matrix4x4().reflectionY();
+        }
+        else if (axis == 'z')
+        {
+            r = Matrix4x4().reflectionZ();
+        }
+        for (int i = 0; i < vertices.size(); i++)
+        {
+            vertices[i] = r * vertices[i];
         }
     }
 };

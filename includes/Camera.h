@@ -18,15 +18,15 @@ public:
     Vector3D W, U, V; // Vetores ortonormais
     Point3D centro_tela;
     Point3D primeiro_pixel;
-    double d;   // Distância entre a câmera e a tela
+    double d;  // Distância entre a câmera e a tela
     int h_res; // Altura da tela
     int w_res; // Largura da tela
     Vector3D subir_1;
     Vector3D direita_1;
     Scene *scene_ptr;
 
-    Camera(const Point3D C, const Point3D M, const double d, const int w_res, const int h_res, Scene *scene_ptr)
-        : C(C), M(M), d(d), w_res(w_res), h_res(h_res), scene_ptr(scene_ptr)
+    Camera(const Point3D C, const Point3D M, const double d, const int w_res, const int h_res)
+        : C(C), M(M), d(d), w_res(w_res), h_res(h_res)
     {
         updateVectors();
     }
@@ -43,100 +43,106 @@ public:
         updateVectors();
     }
 
-    std::pair<Vector3D, double> raycolor(Line& ray){
+    std::pair<Vector3D, double> raycolor(Line &ray, Scene *scene_ptr)
+    {
 
-            double min_t = INFINITY;
-            Vector3D color;
+        double min_t = INFINITY;
+        Vector3D color;
 
-            // interpolação do background, só pra ficar bonito mesmo
+        // interpolação do background, só pra ficar bonito mesmo
 
-            auto a = 0.5*(ray.line_vector.getY() + 1.0);
-            color = Vector3D(1.0, 1.0, 1.0)*(1.0-a) + Vector3D(0.5, 0.7, 1.0)*a;
+        auto a = 0.5 * (ray.line_vector.getY() + 1.0);
+        color = Vector3D(1.0, 1.0, 1.0) * (1.0 - a) + Vector3D(0.5, 0.7, 1.0) * a;
 
-            // fazemos a checagem de interseção com cada tipo de objeto na cena
+        // fazemos a checagem de interseção com cada tipo de objeto na cena
 
-            for (Plane plane : scene_ptr->planos){
+        for (Plane plane : scene_ptr->planos)
+        {
 
-                double t = ray.l_p_intersection(plane);
+            double t = ray.l_p_intersection(plane);
 
-                if (t != -1){
-                       if(t<min_t){
-                        
-                        min_t = t;
-                        color = plane.cor;
-
-                       }
-                    }
-                }
-
-            for (Sphere sphere : scene_ptr->esferas)
+            if (t != -1)
             {
-                    double t = ray.l_s_intersection(sphere);
-
-                    if (t != -1){
-                       if(t<min_t){
-
-                        /*
-
-                            muita coisa acontece aqui, vamos por partes:
-
-                            Lambert's cosine law diz que a luz que reflete de um objeto é inversamente proporcional ao angulo entre a normal do objeto e raio
-                            Aqui, calculamos a normal da bola e o cosseno do angulo de incidencia com a normal
-                            Pra deixar a transição da cor mais "smooth", a cor foi multiplicada pelo cosseno da metade do angulo
-                            Cos(x/2) = 1-sqrt((1+cos(x))/2)
-                        
-                        */
-                        Vector3D N = ray.at(t) - sphere.C; N.normalize();
-                        min_t = t;
-                        float degrade = 1-sqrt((1+N.cos(ray.line_vector))/2);
-                        color = sphere.cor*degrade;
-
-                       }
-                    }
-                }  
-            
-            /*for (Malha malha : scene_ptr->malhas)
-            {
-                for (Triangle triangulo : malha.triangulos)
+                if (t < min_t)
                 {
-                        
-                            double t = ray.l_t_intersection(triangulo);
-            
-                            if (t != -1){
-                                if(t<min_t){
-            
-                                //Vector3D N = triangulo.NormalVector();
-                                min_t = t;
-                                //float degrade = 1-sqrt((1+N.cos(ray.line_vector))/2);
-                                color = triangulo.cor;
-            
-                                }
-                            }
 
+                    min_t = t;
+                    color = plane.cor;
                 }
-            }*/
-            
-            for (Triangle triangulo : scene_ptr->triangulos)
+            }
+        }
+
+        for (Sphere sphere : scene_ptr->esferas)
+        {
+            double t = ray.l_s_intersection(sphere);
+
+            if (t != -1)
             {
+                if (t < min_t)
+                {
+
+                    /*
+
+                        muita coisa acontece aqui, vamos por partes:
+
+                        Lambert's cosine law diz que a luz que reflete de um objeto é inversamente proporcional ao angulo entre a normal do objeto e raio
+                        Aqui, calculamos a normal da bola e o cosseno do angulo de incidencia com a normal
+                        Pra deixar a transição da cor mais "smooth", a cor foi multiplicada pelo cosseno da metade do angulo
+                        Cos(x/2) = 1-sqrt((1+cos(x))/2)
+
+                    */
+                    Vector3D N = ray.at(t) - sphere.C;
+                    N.normalize();
+                    min_t = t;
+                    float degrade = 1 - sqrt((1 + N.cos(ray.line_vector)) / 2);
+                    color = sphere.cor * degrade;
+                }
+            }
+        }
+
+        /*for (Malha malha : scene_ptr->malhas)
+        {
+            for (Triangle triangulo : malha.triangulos)
+            {
+
                         double t = ray.l_t_intersection(triangulo);
-    
+
                         if (t != -1){
-                           if(t<min_t){
-    
-                                Vector3D N = triangulo.NormalVector();
-                                min_t = t;
-                                float degrade = 1-sqrt((1+N.cos(ray.line_vector))/2);
-                                color = triangulo.cor*degrade;
-    
+                            if(t<min_t){
+
+                            //Vector3D N = triangulo.NormalVector();
+                            min_t = t;
+                            //float degrade = 1-sqrt((1+N.cos(ray.line_vector))/2);
+                            color = triangulo.cor;
+
                             }
                         }
-            }     
-            // retorna a cor e o t
-            
-            return {color,min_t};          
+
+            }
+        }*/
+
+        for (Triangle triangulo : scene_ptr->triangulos)
+        {
+            double t = ray.l_t_intersection(triangulo);
+
+            if (t != -1)
+            {
+                if (t < min_t)
+                {
+
+                    Vector3D N = triangulo.NormalVector();
+                    min_t = t;
+                    float degrade = 1 - sqrt((1 + N.cos(ray.line_vector)) / 2);
+                    color = triangulo.cor * degrade;
+                }
+            }
+        }
+        // retorna a cor e o t
+
+        return {color, min_t};
     }
 
-    std::vector<Point3D> render()
+    std::vector<Point3D> render(Scene *scene_ptr)
     {
         std::vector<Point3D> retornar;
         // para cada linha de pixels
@@ -147,10 +153,10 @@ public:
             for (int j = 0; j < w_res; j++)
             {
 
-                /* 
+                /*
                     pegamos o primeiro pixel, somamos com quantas vezes queremos ir pra direita + quantas vezes queremos ir pra baixo
                     isto é, P11 + direita*j + up*-i = P(i-1)(j-1)
-                    note que como (i,j) começa como (0,0), o primeiro pixel tá contado 
+                    note que como (i,j) começa como (0,0), o primeiro pixel tá contado
                 */
 
                 Point3D pixel_que_estamos = primeiro_pixel + (direita_1 * j) + (subir_1 * (-1 * i));
@@ -159,19 +165,19 @@ public:
 
                 Line linha_centro_pixel = Line(C, pixel_que_estamos);
 
-                Vector3D cor_do_pixel; float t;
+                Vector3D cor_do_pixel;
+                float t;
 
                 // pegamos a cor do pixel do objeto que intersecta mais perto (retorna um par (cor, t))
 
-                auto temp = raycolor(linha_centro_pixel);
+                auto temp = raycolor(linha_centro_pixel, scene_ptr);
 
-                cor_do_pixel = temp.first; t = temp.second;
-               
-                
+                cor_do_pixel = temp.first;
+                t = temp.second;
+
                 // manda pro ppm
 
-                retornar.push_back(Point3D(cor_do_pixel.getX(),cor_do_pixel.getY(),cor_do_pixel.getZ()));
-
+                retornar.push_back(Point3D(cor_do_pixel.getX(), cor_do_pixel.getY(), cor_do_pixel.getZ()));
             }
         }
         return retornar;
