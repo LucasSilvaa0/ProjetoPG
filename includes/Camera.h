@@ -56,9 +56,9 @@ public:
 
         // fazemos a checagem de interseção com cada tipo de objeto na cena
 
-        for (Plane plane : scene_ptr->planos)
+        for (Plane * plane_ptr : scene_ptr->planos)
         {
-
+            Plane plane = *plane_ptr;
             double t = ray.l_p_intersection(plane);
 
             if (t != -1)
@@ -72,8 +72,9 @@ public:
             }
         }
 
-        for (Sphere sphere : scene_ptr->esferas)
+        for (Sphere * sphere_ptr : scene_ptr->esferas)
         {
+            Sphere sphere = *sphere_ptr;
             double t = ray.l_s_intersection(sphere);
 
             if (t != -1)
@@ -120,25 +121,26 @@ public:
 
             }
         }*/
-
-        for (Triangle triangulo : scene_ptr->triangulos)
-        {
-            double t = ray.l_t_intersection(triangulo);
-
-            if (t != -1)
+        for(objReader * object_ptr: scene_ptr->objetos){
+            for (Face face : object_ptr->getFaces())
             {
-                if (t < min_t)
-                {
+                Triangle triangulo = object_ptr->faceToTriangulo(face);
+                double t = ray.l_t_intersection(triangulo);
 
-                    Vector3D N = triangulo.NormalVector();
-                    min_t = t;
-                    float degrade = 1 - sqrt((1 + N.cos(ray.line_vector)) / 2);
-                    color = triangulo.cor * degrade;
+                if (t != -1)
+                {
+                    if (t < min_t)
+                    {
+
+                        Vector3D N = triangulo.NormalVector();
+                        min_t = t;
+                        float degrade = 1 - sqrt((1 + N.cos(ray.line_vector)) / 2);
+                        color = triangulo.cor * degrade;
+                    }
                 }
             }
         }
         // retorna a cor e o t
-
         return {color, min_t};
     }
 

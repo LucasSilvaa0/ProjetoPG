@@ -13,19 +13,10 @@
 class Scene
 {
 public:
-    std::vector<Plane> planos;
-    std::vector<Sphere> esferas;
-    std::vector<Triangle> triangulos;
-
-    void addObj(objReader &objeto)
-    {
-        for (Face face : objeto.getFaces())
-        {
-            Triangle teste = objeto.faceToTriangulo(face);
-
-            triangulos.push_back(teste);
-        }
-    }
+    std::vector<Plane *> planos;
+    std::vector<Sphere *> esferas;
+    std::vector<Triangle *> triangulos;
+    std::vector<objReader *> objetos;
 };
 
 #endif

@@ -11,22 +11,22 @@
 
 int main()
 {
-    objReader obj("input/cubo.obj");
+    objReader * obj = new objReader("input/cubo.obj");
 
     Camera camera = Camera(Point3D(-10, 0, 0), Point3D(1, 0, 0), (double)1, 800, 600);
 
     /*-----------------------------------------------------*/
 
-    Scene *cenaA = new Scene();
+    Scene *cena = new Scene();
 
     /*-----------------------------------------------------*/
 
-    obj.transladar(0, 0, 1);
+    obj->transladar(0, 0, 1);
 
     /*-----------------------------------------------------*/
 
-    cenaA->addObj(obj);
-    auto antes = camera.render(cenaA);
+    cena->objetos.push_back(obj);
+    auto antes = camera.render(cena);
     Renderer windowA = Renderer(800, 600, antes);
 
     /*-----------------------------------------------------*/
@@ -35,16 +35,11 @@ int main()
     /*-----------------------------------------------------*/
     /*-----------------------------------------------------*/
 
-    Scene *cenaD = new Scene();
+    obj->refletir('x');
 
     /*-----------------------------------------------------*/
 
-    obj.refletir('x');
-
-    /*-----------------------------------------------------*/
-
-    cenaD->addObj(obj);
-    auto depois = camera.render(cenaD);
+    auto depois = camera.render(cena);
     Renderer windowD = Renderer(800, 600, depois);
 
     /*-----------------------------------------------------*/
