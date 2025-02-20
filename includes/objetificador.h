@@ -31,12 +31,12 @@ Caso sintam necessidade, podem editar a classe para obter mais informações.
 #include <vector>
 #include <string>
 #include <sstream>
-#include "includes/Vector.h"
-#include "includes/Point.h"
-#include "includes/Colormap.h"
-#include "includes/Malha.h"
-#include "includes/Matrix.h"
-#include "includes/Triangle.h"
+#include "Vector.h"
+#include "Point.h"
+#include "Colormap.h"
+#include "Malha.h"
+#include "Matrix.h"
+#include "Triangle.h"
 
 struct Face
 {

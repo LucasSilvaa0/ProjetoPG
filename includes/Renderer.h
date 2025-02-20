@@ -1,89 +1,121 @@
-#ifndef RENDERHEADER
-#define RENDERHEADER
+#define NOMINMAX
+#define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <vector>
 #include "Point.h"
 
-
-struct RGB {
-    BYTE r, g, b;
-};
-
 class Renderer {
 public:
+    int width, height;
+    std::vector<Point3D> colors;
+    HWND hwnd;
+    HDC hdc;
+    HBITMAP hBitmap;
+    HDC hdcMem;
 
-    HWND m_hWnd;
-    int m_width, m_height;
-    std::vector<Point3D> indio;
+    void drawPixels() {
 
-    Renderer(int width, int height)
-        : m_width(width), m_height(height){
-        // Inicializa a janela
-        WNDCLASS wc = {0};
-        wc.lpfnWndProc = WindowProc;
-        wc.hInstance = GetModuleHandle(nullptr);
-        wc.lpszClassName = "RendererClass";
-        RegisterClass(&wc);
+        std::vector<COLORREF> pixels(width * height);
 
-        m_hWnd = CreateWindowEx(0, "RendererClass", "RGB Renderer", WS_OVERLAPPEDWINDOW,
-            CW_USEDEFAULT, CW_USEDEFAULT, m_width, m_height, nullptr, nullptr, wc.hInstance, this);
-        ShowWindow(m_hWnd, SW_SHOW);
-        UpdateWindow(m_hWnd);
-    }
 
-    void Render() {
-        // Cria o contexto de dispositivo para desenhar na janela
-        HDC hdc = GetDC(m_hWnd);
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                int index = y * width + x;
+                if (index < colors.size()) {
 
-        // Preenche cada pixel com a cor correspondente
-        for (int y = 0; y < m_height; ++y) {
-            for (int x = 0; x < m_width; ++x) {
-                auto color = indio[y * m_width + x];
-                SetPixel(hdc, x, y, RGB(color.getX(), color.getY(), color.getZ()));
+                    int r = static_cast<int>(colors[index].x * 255);
+                    int g = static_cast<int>(colors[index].y * 255);
+                    int b = static_cast<int>(colors[index].z * 255);
+
+                    pixels[index] = RGB(r, g, b);
+                } else {
+                    // Preenche com preto se não houver cor definida
+                    pixels[index] = RGB(0, 0, 0);
+                }
             }
         }
 
-        // Libera o contexto de dispositivo
-        ReleaseDC(m_hWnd, hdc);
+        SetBitmapBits(hBitmap, width * height * sizeof(COLORREF), pixels.data());
     }
 
-    void Run() {
-        // Loop de mensagens da janela
-        MSG msg = {0};
-        while (GetMessage(&msg, nullptr, 0, 0)) {
+    static LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+        switch (uMsg) {
+            case WM_PAINT: {
+                PAINTSTRUCT ps;
+                HDC hdc = BeginPaint(hwnd, &ps);
+
+                // Obtém o renderer associado à janela
+                Renderer* renderer = reinterpret_cast<Renderer*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
+                if (renderer) {
+                    // Desenha o bitmap na janela
+                    BitBlt(hdc, 0, 0, renderer->width, renderer->height, renderer->hdcMem, 0, 0, SRCCOPY);
+                }
+
+                EndPaint(hwnd, &ps);
+                return 0;
+            }
+            case WM_DESTROY:
+                PostQuitMessage(0);
+                return 0;
+            default:
+                return DefWindowProc(hwnd, uMsg, wParam, lParam);
+        }
+    }
+
+
+    Renderer(int width, int height, const std::vector<Point3D>& colors)
+        : width(width), height(height), colors(colors) {
+
+        WNDCLASS wc = {};
+        wc.lpfnWndProc = WindowProc;
+        wc.hInstance = GetModuleHandle(NULL);
+        wc.lpszClassName = TEXT("RendererClass");
+        RegisterClass(&wc);
+
+        hwnd = CreateWindowEx(
+            0,
+            TEXT("RendererClass"),
+            TEXT("Renderer"),
+            WS_OVERLAPPEDWINDOW,
+            CW_USEDEFAULT, CW_USEDEFAULT, width, height,
+            NULL,
+            NULL,
+            GetModuleHandle(NULL),
+            NULL
+        );
+
+        SetWindowLongPtr(hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this));
+
+        hdc = GetDC(hwnd);
+
+        hdcMem = CreateCompatibleDC(hdc);
+
+        hBitmap = CreateCompatibleBitmap(hdc, width, height);
+
+        SelectObject(hdcMem, hBitmap);
+
+        drawPixels();
+
+        ShowWindow(hwnd, SW_SHOW);
+    }
+
+    ~Renderer() {
+        DeleteObject(hBitmap);
+        DeleteDC(hdcMem);
+        ReleaseDC(hwnd, hdc);
+    }
+
+    void run() {
+        MSG msg = {};
+        while (GetMessage(&msg, NULL, 0, 0)) {
             TranslateMessage(&msg);
             DispatchMessage(&msg);
         }
     }
 
-    static LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-        Renderer* pRenderer;
-        if (uMsg == WM_CREATE) {
-            pRenderer = reinterpret_cast<Renderer*>(((CREATESTRUCT*)lParam)->lpCreateParams);
-            SetWindowLongPtr(hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pRenderer));
-        } else {
-            pRenderer = reinterpret_cast<Renderer*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
-        }
-
-        if (pRenderer) {
-            switch (uMsg) {
-            case WM_PAINT:
-                pRenderer->Render();
-                break;
-            case WM_DESTROY:
-                PostQuitMessage(0);
-                break;
-            }
-        }
-
-        return DefWindowProc(hwnd, uMsg, wParam, lParam);
+    void updateColors(std::vector<Point3D>& indio) {
+        colors = indio;
+        drawPixels();
     }
 
-    void updateIndio(std::vector<Point3D>& indio_novo){
-        indio.resize(0);
-        indio = indio_novo;
-    }
-    
 };
-
-#endif

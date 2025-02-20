@@ -123,27 +123,22 @@ public:
                         if (t != -1){
                            if(t<min_t){
     
-                            //Vector3D N = triangulo.NormalVector();
-                            min_t = t;
-                            //float degrade = 1-sqrt((1+N.cos(ray.line_vector))/2);
-                            color = triangulo.cor;
+                                Vector3D N = triangulo.NormalVector();
+                                min_t = t;
+                                float degrade = 1-sqrt((1+N.cos(ray.line_vector))/2);
+                                color = triangulo.cor*degrade;
     
-                                }
                             }
+                        }
             }     
             // retorna a cor e o t
             
             return {color,min_t};          
     }
 
-    std::vector<Point3D> render(const std:: string& filename)
+    std::vector<Point3D> render()
     {
-        std::vector<Point3D>retornar;
-        std::ofstream file(filename, std::ios::out | std::ios::trunc);
-        // header do ppm
-        file << "P3\n" << h_res << ' ' << w_res << "\n255\n";
-
-
+        std::vector<Point3D> retornar;
         // para cada linha de pixels
         for (int i = 0; i < h_res; i++)
         {
@@ -172,13 +167,14 @@ public:
 
                 cor_do_pixel = temp.first; t = temp.second;
                
+                
                 // manda pro ppm
 
-                retornar.push_back(Point3D(cor_do_pixel.getX()*255, cor_do_pixel.getY()*255, cor_do_pixel.getZ()*255));
+                retornar.push_back(Point3D(cor_do_pixel.getX(),cor_do_pixel.getY(),cor_do_pixel.getZ()));
 
             }
-            return retornar;
         }
+        return retornar;
     }
 
     void updateVectors()
