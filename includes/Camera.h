@@ -56,7 +56,7 @@ public:
 
         // fazemos a checagem de interseção com cada tipo de objeto na cena
 
-        for (Plane * plane_ptr : scene_ptr->planos)
+        for (Plane *plane_ptr : scene_ptr->planos)
         {
             Plane plane = *plane_ptr;
             double t = ray.l_p_intersection(plane);
@@ -72,7 +72,7 @@ public:
             }
         }
 
-        for (Sphere * sphere_ptr : scene_ptr->esferas)
+        for (Sphere *sphere_ptr : scene_ptr->esferas)
         {
             Sphere sphere = *sphere_ptr;
             double t = ray.l_s_intersection(sphere);
@@ -121,7 +121,8 @@ public:
 
             }
         }*/
-        for(objReader * object_ptr: scene_ptr->objetos){
+        for (objReader *object_ptr : scene_ptr->objetos)
+        {
             for (Face face : object_ptr->getFaces())
             {
                 Triangle triangulo = object_ptr->faceToTriangulo(face);

@@ -11,42 +11,30 @@
 
 int main()
 {
-    objReader * obj = new objReader("input/cubo.obj");
-
-    Camera camera = Camera(Point3D(-10, 0, 0), Point3D(1, 0, 0), (double)1, 800, 600);
-
-    /*-----------------------------------------------------*/
-
+    objReader *obj = new objReader("input/cubo.obj");
+    Camera camera = Camera(Point3D(-10, 0, 0), Point3D(0, 0, 0), (double)1, 800, 600);
     Scene *cena = new Scene();
 
-    /*-----------------------------------------------------*/
-
-    obj->transladar(0, 0, 1);
-
-    /*-----------------------------------------------------*/
+    obj->transladar(0, 0, 2.9);
 
     cena->objetos.push_back(obj);
+
+    Point3D pc = Point3D(0, 0, 0);
+    Sphere *esfera = new Sphere(pc, 1, 0, 255, 0);
+    cena->esferas.push_back(esfera);
+    std::cout << esfera->C.getX() << " " << esfera->C.getY() << " " << esfera->C.getZ() << " " << esfera->r << " " << cena->esferas.size() << "\n";
+
     auto antes = camera.render(cena);
-    Renderer windowA = Renderer(800, 600, antes);
+    Renderer windowA = Renderer(800, 600, antes); // ANTES
 
-    /*-----------------------------------------------------*/
-    /*-----------------------------------------------------*/
-    /*-----------------------------------------------------*/
-    /*-----------------------------------------------------*/
-    /*-----------------------------------------------------*/
-
+    esfera->transladar(0.001, 0, 0);
     obj->refletir('x');
+    obj->transladar(0.005, 0, 0);
 
-    /*-----------------------------------------------------*/
+    std::cout << esfera->C.getX() << " " << esfera->C.getY() << " " << esfera->C.getZ() << " " << esfera->r << " " << cena->esferas.size() << "\n";
 
     auto depois = camera.render(cena);
-    Renderer windowD = Renderer(800, 600, depois);
-
-    /*-----------------------------------------------------*/
-    /*-----------------------------------------------------*/
-    /*-----------------------------------------------------*/
-    /*-----------------------------------------------------*/
-    /*-----------------------------------------------------*/
+    Renderer windowD = Renderer(800, 600, depois); // DEPOIS
 
     windowA.run(); // ANTES
     windowD.run(); // DEPOIS

@@ -28,6 +28,11 @@ public:
         double produtoEscalar = (N.dot(D));
         return Vector3D(D - (D * double(2 * produtoEscalar)));
     };
+
+    void transladar(double x, double y, double z)
+    {
+        C = Point3D(C.getX() + x, C.getY() + y, C.getZ() + z);
+    }
 };
 
 #endif

@@ -64,6 +64,9 @@ public:
         double t1 = (-1 * B + sqrt(B * B - 4 * A * C)) / (2 * A);
         double t2 = (-1 * B - sqrt(B * B - 4 * A * C)) / (2 * A);
 
+        if (u == 1 && v == 0 && w == 0)
+            std::cout << this->at(t1).getX() << " " << this->at(t1).getY() << " " << this->at(t1).getZ() << "\n";
+
         if (t1 >= 0 && t1 <= abs(t2))
         {
             return t1;
@@ -108,7 +111,8 @@ public:
         Vector3D h = line_vector.cross(edge2);
         double a = edge1.dot(h);
 
-        if (a > -EPSILON && a < EPSILON) {
+        if (a > -EPSILON && a < EPSILON)
+        {
             return -1;
         }
 
@@ -116,26 +120,30 @@ public:
         Vector3D s = point1 - v0;
         double u = f * s.dot(h);
 
-        if (u < 0.0 || u > 1.0) {
-            return -1; 
+        if (u < 0.0 || u > 1.0)
+        {
+            return -1;
         }
 
         Vector3D q = s.cross(edge1);
         double v = f * line_vector.dot(q);
 
-        if (v < 0.0 || u + v > 1.0) {
-            return -1; 
+        if (v < 0.0 || u + v > 1.0)
+        {
+            return -1;
         }
 
         double t = f * edge2.dot(q);
 
-        if (t > EPSILON) {
-            return t; 
-        } else {
+        if (t > EPSILON)
+        {
+            return t;
+        }
+        else
+        {
             return -1;
         }
     }
-
 };
 
 #endif
