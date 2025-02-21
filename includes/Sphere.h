@@ -33,6 +33,11 @@ public:
     {
         C = Point3D(C.getX() + x, C.getY() + y, C.getZ() + z);
     }
+
+    void escalar(double x)
+    {
+        r = r * x;
+    }
 };
 
 #endif

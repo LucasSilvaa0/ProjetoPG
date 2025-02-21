@@ -56,8 +56,9 @@ public:
         double y = data[1][0] * pt.x + data[1][1] * pt.y + data[1][2] * pt.z + data[1][3];
         double z = data[2][0] * pt.x + data[2][1] * pt.y + data[2][2] * pt.z + data[2][3];
         double w = data[3][0] * pt.x + data[3][1] * pt.y + data[3][2] * pt.z + data[3][3];
-        
-        if (w != 0) {
+
+        if (w != 0)
+        {
             x /= w;
             y /= w;
             z /= w;
@@ -147,45 +148,46 @@ public:
     // Reflexão em relação ao eixo X
     Matrix4x4 reflectionX()
     {
-        return Matrix4x4({
-            {1,  0,  0, 0},
-            {0, -1,  0, 0},
-            {0,  0, -1, 0},
-            {0,  0,  0, 1}
-        });
+        return Matrix4x4({{1, 0, 0, 0},
+                          {0, -1, 0, 0},
+                          {0, 0, -1, 0},
+                          {0, 0, 0, 1}});
     }
 
     // Reflexão em relação ao eixo Y
     Matrix4x4 reflectionY()
     {
-        return Matrix4x4({
-            {-1, 0,  0, 0},
-            { 0, 1,  0, 0},
-            { 0, 0, -1, 0},
-            { 0, 0,  0, 1}
-        });
+        return Matrix4x4({{-1, 0, 0, 0},
+                          {0, 1, 0, 0},
+                          {0, 0, -1, 0},
+                          {0, 0, 0, 1}});
     }
 
     // Reflexão em relação ao eixo Z
     Matrix4x4 reflectionZ()
     {
-        return Matrix4x4({
-            {-1,  0, 0, 0},
-            { 0, -1, 0, 0},
-            { 0,  0, 1, 0},
-            { 0,  0, 0, 1}
-        });
+        return Matrix4x4({{-1, 0, 0, 0},
+                          {0, -1, 0, 0},
+                          {0, 0, 1, 0},
+                          {0, 0, 0, 1}});
     }
 
     // Translação por (tx, ty, tz)
     Matrix4x4 translation(double tx, double ty, double tz)
     {
-        return Matrix4x4({
-            {1, 0, 0, tx},
-            {0, 1, 0, ty},
-            {0, 0, 1, tz},
-            {0, 0, 0, 1}
-        });
+        return Matrix4x4({{1, 0, 0, tx},
+                          {0, 1, 0, ty},
+                          {0, 0, 1, tz},
+                          {0, 0, 0, 1}});
+    }
+
+    // Escalar por (sx, sy, sz)
+    Matrix4x4 scale(double sx, double sy, double sz)
+    {
+        return Matrix4x4({{sx, 0, 0, 0},
+                          {0, sy, 0, 0},
+                          {0, 0, sz, 0},
+                          {0, 0, 0, 1}});
     }
 
     // Exibir matriz

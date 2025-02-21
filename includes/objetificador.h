@@ -332,6 +332,38 @@ public:
             vertices[i] = r * vertices[i];
         }
     }
+
+    void escalar(double x)
+    {
+        double soma_x = 0;
+        double soma_y = 0;
+        double soma_z = 0;
+        for (int i = 0; i < vertices.size(); i++)
+        {
+            soma_x += vertices[i].getX();
+            soma_y += vertices[i].getY();
+            soma_z += vertices[i].getZ();
+        }
+        double centro_x = soma_x / vertices.size();
+        double centro_y = soma_y / vertices.size();
+        double centro_z = soma_z / vertices.size();
+
+        if (centro_x != 0 || centro_y != 0 || centro_z != 0)
+        {
+            this->transladar(-centro_x, -centro_y, -centro_z); // translada para a origem (0,0,0)
+        }
+
+        Matrix4x4 e = Matrix4x4().scale(x, x, x);
+        for (int i = 0; i < vertices.size(); i++)
+        {
+            vertices[i] = e * vertices[i];
+        }
+
+        if (centro_x != 0 || centro_y != 0 || centro_z != 0)
+        {
+            this->transladar(centro_x, centro_y, centro_z); // translada de volta para a posição do objeto
+        }
+    }
 };
 
 #endif
