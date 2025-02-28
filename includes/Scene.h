@@ -7,6 +7,7 @@
 #include "Point.h"
 #include "Triangle.h"
 #include "objetificador.h"
+#include "Luz.h"
 #include <vector>
 #include <map>
 
@@ -17,6 +18,7 @@ public:
     std::vector<Sphere *> esferas;
     std::vector<Triangle *> triangulos;
     std::vector<objReader *> objetos;
+    std::vector<Luz *> luzes;
 };
 
 #endif
