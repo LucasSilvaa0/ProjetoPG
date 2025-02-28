@@ -238,11 +238,16 @@ public:
             N->normalize();
 
             double cosNL = N->dot(L);
+
+            if (cosNL < 0)
+                cosNL *= -1;
+
             soma.x = kd->x * cosNL;
             soma.y = kd->y * cosNL;
             soma.z = kd->z * cosNL;
 
             // Luz especular
+            // ainda não está funcionando
 
             // Intensidade da luz
             soma.x = soma.x * luz->cor.x;
@@ -250,9 +255,21 @@ public:
             soma.z = soma.z * luz->cor.z;
         }
 
+        if (soma.x < 0 || soma.y < 0 || soma.z < 0)
+        {
+            soma.print();
+        }
+
         cor.x += soma.x;
         cor.y += soma.y;
         cor.z += soma.z;
+
+        if (cor.x > 1)
+            cor.x = 1;
+        if (cor.y > 1)
+            cor.y = 1;
+        if (cor.z > 1)
+            cor.z = 1;
 
         return cor;
     }
