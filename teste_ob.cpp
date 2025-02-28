@@ -28,7 +28,7 @@ int main()
     cena->esferas.push_back(esfera);
 
     auto antes = camera.render(cena);
-    Renderer windowA = Renderer(800, 600, antes); // ANTES
+    Renderer windowA = Renderer(800, 600, antes, "Antes"); // ANTES
 
     plano->rotacionar(1.57, 'y');
     obj->escalar(2);
@@ -36,7 +36,7 @@ int main()
     esfera->escalar(3);
 
     auto depois = camera.render(cena);
-    Renderer windowD = Renderer(800, 600, depois); // DEPOIS
+    Renderer windowD = Renderer(800, 600, depois, "Depois"); // DEPOIS
 
     windowA.run(); // ANTES
     windowD.run(); // DEPOIS
