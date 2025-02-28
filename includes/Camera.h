@@ -23,7 +23,6 @@ public:
     int w_res; // Largura da tela
     Vector3D subir_1;
     Vector3D direita_1;
-    Scene *scene_ptr;
 
     Camera(const Point3D C, const Point3D M, const double d, const int w_res, const int h_res)
         : C(C), M(M), d(d), w_res(w_res), h_res(h_res)
@@ -135,12 +134,14 @@ public:
 
                         Vector3D N = triangulo.NormalVector();
                         min_t = t;
-                        float degrade = 1 - sqrt((1 + N.cos(ray.line_vector)) / 2);
-                        color = triangulo.cor * degrade;
+
+                        // color = triangulo.cor;
+                        color = colorPhong(&face.ka, scene_ptr, &face.kd, &N, &face.ks, &ray.line_vector, ray.at(min_t), face.ns);
                     }
                 }
             }
         }
+
         // retorna a cor e o t
         return {color, min_t};
     }
@@ -213,6 +214,47 @@ public:
         double qtdup = (h_res - 1) / 2;
         double qtdesq = (w_res - 1) / 2;
         primeiro_pixel = centro_tela + ((subir_1 * qtdup) + (esquerda_1 * qtdesq));
+    }
+
+    Vector3D colorPhong(Vector3D *ka, Scene *scene_ptr, Vector3D *kd, Vector3D *N, Vector3D *ks, Vector3D *V, Point3D Pintercessao, int n)
+    {
+        Vector3D cor = Vector3D(0, 0, 0);
+
+        // Luz ambiente
+        Vector3D *Ia = &scene_ptr->Ia;
+        cor.x = Ia->x * ka->x;
+        cor.y = Ia->y * ka->y;
+        cor.z = Ia->z * ka->z;
+
+        Vector3D soma;
+        for (Luz *luz : scene_ptr->luzes)
+        {
+
+            soma = Vector3D(0, 0, 0);
+
+            // Luz difusa
+            Vector3D L = Pintercessao - luz->p;
+            L.normalize();
+            N->normalize();
+
+            double cosNL = N->dot(L);
+            soma.x = kd->x * cosNL;
+            soma.y = kd->y * cosNL;
+            soma.z = kd->z * cosNL;
+
+            // Luz especular
+
+            // Intensidade da luz
+            soma.x = soma.x * luz->cor.x;
+            soma.y = soma.y * luz->cor.y;
+            soma.z = soma.z * luz->cor.z;
+        }
+
+        cor.x += soma.x;
+        cor.y += soma.y;
+        cor.z += soma.z;
+
+        return cor;
     }
 
     void print() const

@@ -19,6 +19,10 @@ public:
     std::vector<Triangle *> triangulos;
     std::vector<objReader *> objetos;
     std::vector<Luz *> luzes;
+
+    Vector3D Ia;
+
+    Scene(Vector3D Ia) { this->Ia = Ia; }
 };
 
 #endif

@@ -8,38 +8,25 @@
 #include "includes/Scene.h"
 #include "includes/objetificador.h"
 #include "includes/Renderer.h"
+#include "includes/Luz.h"
 
 int main()
 {
     objReader *obj = new objReader("input/cubo.obj");
-    Camera camera = Camera(Point3D(-10, 0, 0), Point3D(0, 0, 0), (double)1, 800, 600);
-    Scene *cena = new Scene();
+    Camera camera = Camera(Point3D(-12, 0, 0), Point3D(0, 0, 0), (double)1, 800, 600);
+    Scene *cena = new Scene(Vector3D(0.2, 0.2, 0.2));
+    Luz *luz = new Luz(Point3D(5, 0, 2), 1, 0, 0);
 
     cena->objetos.push_back(obj);
+    cena->luzes.push_back(luz);
 
-    obj->transladar(0, 2, 0);
-
-    Plane *plano = new Plane(Point3D(0, 0, 0), Vector3D(-1, 0, -1), 0, 0, 255);
-
-    Point3D ce = Point3D(0, 0, 0);
-    Sphere *esfera = new Sphere(ce, 1, 0, 255, 0);
-
-    cena->planos.push_back(plano);
-    cena->esferas.push_back(esfera);
+    obj->escalar(2);
+    obj->transladar(5, 4, 2);
 
     auto antes = camera.render(cena);
     Renderer windowA = Renderer(800, 600, antes, "Antes"); // ANTES
 
-    plano->rotacionar(1.57, 'y');
-    obj->escalar(2);
-    obj->transladar(0, 2, 0);
-    esfera->escalar(3);
-
-    auto depois = camera.render(cena);
-    Renderer windowD = Renderer(800, 600, depois, "Depois"); // DEPOIS
-
     windowA.run(); // ANTES
-    windowD.run(); // DEPOIS
 
     return 0;
 }
