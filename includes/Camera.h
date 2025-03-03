@@ -8,6 +8,7 @@
 #include "Scene.h"
 #include <iostream>
 #include <fstream>
+#include <cmath>
 
 class Camera
 {
@@ -226,12 +227,9 @@ public:
         cor.y = Ia->y * ka->y;
         cor.z = Ia->z * ka->z;
 
-        Vector3D soma;
+        Vector3D soma = Vector3D(0, 0, 0);
         for (Luz *luz : scene_ptr->luzes)
         {
-
-            soma = Vector3D(0, 0, 0);
-
             // Luz difusa
             Vector3D L = Pintercessao - luz->p;
             L.normalize();
@@ -242,17 +240,37 @@ public:
             if (cosNL < 0)
                 cosNL *= -1;
 
-            soma.x = kd->x * cosNL;
-            soma.y = kd->y * cosNL;
-            soma.z = kd->z * cosNL;
+            soma.x += kd->x * cosNL;
+            soma.y += kd->y * cosNL;
+            soma.z += kd->z * cosNL;
 
             // Luz especular
-            // ainda não está funcionando
+            Vector3D le = Vector3D(0, 0, 0);
+
+            Vector3D r = L.refletir(N);
+            double vrn = pow(V->dot(r), n);
+
+            if (vrn < 0)
+                vrn *= -1;
+
+            le.x = luz->cor.x * (ks->x * vrn);
+            le.y = luz->cor.y * (ks->y * vrn);
+            le.z = luz->cor.z * (ks->z * vrn);
+
+            // std::cout << "ANTES: ";
+            // soma.print();
+
+            soma.x += le.x;
+            soma.y += le.y;
+            soma.z += le.z;
+
+            // std::cout << "DEPOIS: ";
+            // soma.print();
 
             // Intensidade da luz
-            soma.x = soma.x * luz->cor.x;
-            soma.y = soma.y * luz->cor.y;
-            soma.z = soma.z * luz->cor.z;
+            soma.x += soma.x * luz->cor.x;
+            soma.y += soma.y * luz->cor.y;
+            soma.z += soma.z * luz->cor.z;
         }
 
         if (soma.x < 0 || soma.y < 0 || soma.z < 0)

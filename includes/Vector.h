@@ -23,7 +23,7 @@ public:
         return Vector3D(x - other.x, y - other.y, z - other.z);
     }
 
-    Vector3D operator*(const double scalar)
+    Vector3D operator*(double scalar) const
     {
         return Vector3D(x * scalar, y * scalar, z * scalar);
     }
@@ -61,6 +61,14 @@ public:
             y /= mag;
             z /= mag;
         }
+    }
+
+    Vector3D refletir(Vector3D *N) const
+    {
+        double cos = (N->dot(*this));
+        Vector3D r = Vector3D(*this - ((Vector3D(N->x, N->y, N->z) * cos) * 2));
+
+        return r;
     }
 
     // Print
