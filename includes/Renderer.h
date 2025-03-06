@@ -27,9 +27,9 @@ public:
                 if (index < colors.size())
                 {
 
-                    int r = static_cast<int>(colors[index].x * 255);
+                    int r = static_cast<int>(colors[index].z * 255);
                     int g = static_cast<int>(colors[index].y * 255);
-                    int b = static_cast<int>(colors[index].z * 255);
+                    int b = static_cast<int>(colors[index].x * 255);
 
                     pixels[index] = RGB(r, g, b);
                 }

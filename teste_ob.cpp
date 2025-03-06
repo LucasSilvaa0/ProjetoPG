@@ -18,7 +18,7 @@ int main()
     Scene *cena = new Scene(Vector3D(0, 0, 0));
     Luz *luz = new Luz(Point3D(0, 10, 2), 0, 1, 0);
     Luz *luz2 = new Luz(Point3D(0, 0, -10), 0, 1, 0);
-    Plane *plano = new Plane(Point3D(200, -200, 0), Vector3D(-1, 1, 0), 0, 255, 255);
+    Plane *plano = new Plane(Point3D(200, -200, 0), Vector3D(-1, 1, 0), 255, 255, 0);
 
     Point3D ce = Point3D(0, 0, 0);
     // Sphere *esfera = new Sphere(ce, 2, 0, 0, 255);
