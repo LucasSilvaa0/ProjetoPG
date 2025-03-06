@@ -12,9 +12,11 @@
 
 int main()
 {
+    int height = 600;
+    int width = 600;
     objReader *obj = new objReader("input/cubo.obj");
     objReader *obj2 = new objReader("input/cubo.obj");
-    Camera camera = Camera(Point3D(-12, 0, 0), Point3D(0, 0, 0), (double)1, 800, 600);
+    Camera camera = Camera(Point3D(-12, 0, 0), Point3D(0, 0, 0), (double)1, height, width);
     Scene *cena = new Scene(Vector3D(0.8, 0.2, 0.2));
     Luz *luz = new Luz(Point3D(0, 10, 2), 0, 1, 0);
     Luz *luz2 = new Luz(Point3D(0, 0, -10), 0, 1, 0);
@@ -41,7 +43,7 @@ int main()
     obj2->rotacionar(0.7, 'y');
 
     auto antes = camera.render(cena);
-    Renderer windowA = Renderer(800, 600, antes, "Antes"); // ANTES
+    Renderer windowA = Renderer(height, width, antes, "Antes"); // ANTES
 
     windowA.run(); // ANTES
 
