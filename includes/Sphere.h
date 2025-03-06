@@ -13,7 +13,7 @@ public:
 
     MaterialProperties material;
 
-    Sphere(Point3D &centro, double raio, double R, double G, double B) : C(centro), r(raio)
+    Sphere(Point3D &centro, double raio) : C(centro), r(raio)
     {
     }
 
@@ -39,7 +39,6 @@ public:
     {
         r = r * x;
     }
-
 };
 
 #endif

@@ -12,7 +12,6 @@ class Plane
 public:
     Point3D point;   // Ponto
     Vector3D normal; // Vetor normal
-    Vector3D cor;
     MaterialProperties material;
 
     Plane(Point3D point, Vector3D normal) : point(point), normal(normal)
