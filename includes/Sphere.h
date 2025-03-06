@@ -11,7 +11,7 @@ public:
     double r;  // Raio
     Vector3D cor;
 
-    Sphere(Point3D &centro, double raio, int R, int G, int B) : C(centro), r(raio)
+    Sphere(Point3D &centro, double raio, double R, double G, double B) : C(centro), r(raio)
     {
         cor = Vector3D(R / (double)255, G / (double)255, B / (double)255);
     }

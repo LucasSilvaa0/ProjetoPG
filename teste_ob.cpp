@@ -14,12 +14,17 @@ int main()
 {
     objReader *obj = new objReader("input/cubo.obj");
     Camera camera = Camera(Point3D(-12, 0, 0), Point3D(0, 0, 0), (double)1, 800, 600);
-    Scene *cena = new Scene(Vector3D(0, 0, 0.2));
-    Luz *luz = new Luz(Point3D(5, 0, 2), 1, 0, 0);
-    Luz *luz2 = new Luz(Point3D(0, 0, 0), 1, 0, 0);
+    Scene *cena = new Scene(Vector3D(0, 0, 0));
+    Luz *luz = new Luz(Point3D(0, 7, 2), 1, 0, 1);
+    Plane *plano = new Plane(Point3D(200, -200, 0), Vector3D(-1, 1, 0), 255, 255, 0);
+
+    Point3D ce = Point3D(0, 0, 0);
+    Sphere *esfera = new Sphere(ce, 2, 0, 0, 255);
 
     cena->objetos.push_back(obj);
     cena->luzes.push_back(luz);
+    cena->planos.push_back(plano);
+    cena->esferas.push_back(esfera);
 
     obj->escalar(2);
     obj->transladar(5, 4, 2);
@@ -28,13 +33,7 @@ int main()
     auto antes = camera.render(cena);
     Renderer windowA = Renderer(800, 600, antes, "Antes"); // ANTES
 
-    cena->luzes.push_back(luz2);
-
-    auto depois = camera.render(cena);
-    Renderer windowD = Renderer(800, 600, depois, "Depois"); // DEPOIS
-
     windowA.run(); // ANTES
-    windowD.run(); // DEPOIS
 
     return 0;
 }

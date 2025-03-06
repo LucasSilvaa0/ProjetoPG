@@ -257,15 +257,9 @@ public:
             le.y = luz->cor.y * (ks->y * vrn);
             le.z = luz->cor.z * (ks->z * vrn);
 
-            // std::cout << "ANTES: ";
-            // soma.print();
-
             soma.x += le.x;
             soma.y += le.y;
             soma.z += le.z;
-
-            // std::cout << "DEPOIS: ";
-            // soma.print();
 
             // Intensidade da luz
             soma.x += soma.x * luz->cor.x;
