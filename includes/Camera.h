@@ -51,8 +51,7 @@ public:
 
         // interpolação do background, só pra ficar bonito mesmo
 
-        auto a = 0.5 * (ray.line_vector.getY() + 1.0);
-        color = Vector3D(1.0, 1.0, 1.0) * (1.0 - a) + Vector3D(0.5, 0.7, 1.0) * a;
+        color = Vector3D(0, 0, 0);
 
         // fazemos a checagem de interseção com cada tipo de objeto na cena
 
