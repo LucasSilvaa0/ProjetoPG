@@ -64,9 +64,8 @@ public:
             {
                 if (t < min_t)
                 {
-
                     min_t = t;
-                    color = plane.cor;
+                    color = colorPhong(&plane.material.ka, scene_ptr, &plane.material.kd, &plane.normal, &plane.material.ks, &ray.line_vector, ray.at(min_t), plane.material.ns);
                 }
             }
         }
@@ -80,22 +79,10 @@ public:
             {
                 if (t < min_t)
                 {
-
-                    /*
-
-                        muita coisa acontece aqui, vamos por partes:
-
-                        Lambert's cosine law diz que a luz que reflete de um objeto é inversamente proporcional ao angulo entre a normal do objeto e raio
-                        Aqui, calculamos a normal da bola e o cosseno do angulo de incidencia com a normal
-                        Pra deixar a transição da cor mais "smooth", a cor foi multiplicada pelo cosseno da metade do angulo
-                        Cos(x/2) = 1-sqrt((1+cos(x))/2)
-
-                    */
                     Vector3D N = ray.at(t) - sphere.C;
                     N.normalize();
                     min_t = t;
-                    float degrade = 1 - sqrt((1 + N.cos(ray.line_vector)) / 2);
-                    color = sphere.cor * degrade;
+                    color = colorPhong(&sphere.material.ka, scene_ptr, &sphere.material.kd, &N, &sphere.material.ks, &ray.line_vector, ray.at(min_t), sphere.material.ns);
                 }
             }
         }

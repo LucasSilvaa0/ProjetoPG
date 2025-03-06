@@ -5,6 +5,7 @@
 #include "Point.h"
 #include "Vector.h"
 #include "Matrix.h"
+#include "Colormap.h"
 
 class Plane
 {
@@ -12,11 +13,11 @@ public:
     Point3D point;   // Ponto
     Vector3D normal; // Vetor normal
     Vector3D cor;
+    MaterialProperties material;
 
-    Plane(Point3D point, Vector3D normal, int R, int G, int B) : point(point), normal(normal)
+    Plane(Point3D point, Vector3D normal) : point(point), normal(normal)
     {
         this->normal.normalize();
-        cor = Vector3D(R / (double)255, G / (double)255, B / (double)255);
     }
 
     void print() const

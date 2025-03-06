@@ -19,6 +19,7 @@ public:
     std::vector<Triangle *> triangulos;
     std::vector<objReader *> objetos;
     std::vector<Luz *> luzes;
+    colormap cmap;
 
     Vector3D Ia;
 

@@ -70,7 +70,7 @@ struct Face
 class objReader
 {
 
-private:
+public:
     std::ifstream file;                         // Arquivo .obj
     std::vector<point> vertices;                // Lista de pontos
     std::vector<vetor> normals;                 // Lista de normais
@@ -79,7 +79,6 @@ private:
     MaterialProperties curMaterial;             // Material atual
     colormap cmap;                              // Objeto de leitura de arquivos .mtl
 
-public:
     objReader(std::string filename) : cmap(cmap)
     {
 
