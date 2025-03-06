@@ -217,6 +217,62 @@ public:
         primeiro_pixel = centro_tela + ((subir_1 * qtdup) + (esquerda_1 * qtdesq));
     }
 
+    int lightRender(Luz *luz, Point3D *Pintercessao, Scene scene_ptr)
+    {
+        Line ray = Line(luz->p, *Pintercessao);
+
+        // fazemos a checagem de interseção com cada tipo de objeto na cena
+
+        double t_inicial = (Pintercessao->x - luz->p.x) / ray.line_vector.getX();
+
+        for (Plane *plane_ptr : scene_ptr.planos)
+        {
+            Plane plane = *plane_ptr;
+            double t = ray.l_p_intersection(plane);
+
+            if (t != -1)
+            {
+                if (t < t_inicial - 0.001)
+                {
+                    return 0;
+                }
+            }
+        }
+
+        for (Sphere *sphere_ptr : scene_ptr.esferas)
+        {
+            Sphere sphere = *sphere_ptr;
+            double t = ray.l_s_intersection(sphere);
+
+            if (t != -1)
+            {
+                if (t < t_inicial - 0.001)
+                {
+                    return 0;
+                }
+            }
+        }
+
+        for (objReader *object_ptr : scene_ptr.objetos)
+        {
+            for (Face face : object_ptr->getFaces())
+            {
+                Triangle triangulo = object_ptr->faceToTriangulo(face);
+                double t = ray.l_t_intersection(triangulo);
+
+                if (t != -1)
+                {
+                    if (t < t_inicial - 0.001)
+                    {
+                        return 0;
+                    }
+                }
+            }
+        }
+
+        return 1;
+    }
+
     Vector3D colorPhong(Vector3D *ka, Scene *scene_ptr, Vector3D *kd, Vector3D *N, Vector3D *ks, Vector3D *V, Point3D Pintercessao, int n)
     {
         Vector3D cor = Vector3D(0, 0, 0);
@@ -230,41 +286,44 @@ public:
         Vector3D soma = Vector3D(0, 0, 0);
         for (Luz *luz : scene_ptr->luzes)
         {
-            // Luz difusa
-            Vector3D L = Pintercessao - luz->p;
-            L.normalize();
-            N->normalize();
+            if (lightRender(luz, &Pintercessao, *scene_ptr) == 1)
+            {
+                // Luz difusa
+                Vector3D L = Pintercessao - luz->p;
+                L.normalize();
+                N->normalize();
 
-            double cosNL = N->dot(L);
+                double cosNL = N->dot(L);
 
-            if (cosNL < 0)
-                cosNL *= -1;
+                if (cosNL < 0)
+                    cosNL *= -1;
 
-            soma.x += kd->x * cosNL;
-            soma.y += kd->y * cosNL;
-            soma.z += kd->z * cosNL;
+                soma.x += kd->x * cosNL;
+                soma.y += kd->y * cosNL;
+                soma.z += kd->z * cosNL;
 
-            // Luz especular
-            Vector3D le = Vector3D(0, 0, 0);
+                // Luz especular
+                Vector3D le = Vector3D(0, 0, 0);
 
-            Vector3D r = L.refletir(N);
-            double vrn = pow(V->dot(r), n);
+                Vector3D r = L.refletir(N);
+                double vrn = pow(V->dot(r), n);
 
-            if (vrn < 0)
-                vrn *= -1;
+                if (vrn < 0)
+                    vrn *= -1;
 
-            le.x = luz->cor.x * (ks->x * vrn);
-            le.y = luz->cor.y * (ks->y * vrn);
-            le.z = luz->cor.z * (ks->z * vrn);
+                le.x = luz->cor.x * (ks->x * vrn);
+                le.y = luz->cor.y * (ks->y * vrn);
+                le.z = luz->cor.z * (ks->z * vrn);
 
-            soma.x += le.x;
-            soma.y += le.y;
-            soma.z += le.z;
+                soma.x += le.x;
+                soma.y += le.y;
+                soma.z += le.z;
 
-            // Intensidade da luz
-            soma.x += soma.x * luz->cor.x;
-            soma.y += soma.y * luz->cor.y;
-            soma.z += soma.z * luz->cor.z;
+                // Intensidade da luz
+                soma.x += soma.x * luz->cor.x;
+                soma.y += soma.y * luz->cor.y;
+                soma.z += soma.z * luz->cor.z;
+            }
         }
 
         if (soma.x < 0 || soma.y < 0 || soma.z < 0)
