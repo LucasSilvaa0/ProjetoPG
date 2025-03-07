@@ -55,6 +55,12 @@ public:
 
         // fazemos a checagem de interseção com cada tipo de objeto na cena
 
+        Vector3D ka;
+        Vector3D kd;
+        Vector3D normal;
+        Vector3D ks;
+        int ns;
+
         for (Plane *plane_ptr : scene_ptr->planos)
         {
             Plane plane = *plane_ptr;
@@ -65,7 +71,11 @@ public:
                 if (t < min_t)
                 {
                     min_t = t;
-                    color = colorPhong(&plane.material.ka, scene_ptr, &plane.material.kd, &plane.normal, &plane.material.ks, &ray.line_vector, ray.at(min_t), plane.material.ns);
+                    ka = plane.material.ka;
+                    kd = plane.material.kd;
+                    normal = plane.normal;
+                    ks = plane.material.ks;
+                    ns = plane.material.ns;
                 }
             }
         }
@@ -82,7 +92,11 @@ public:
                     Vector3D N = ray.at(t) - sphere.C;
                     N.normalize();
                     min_t = t;
-                    color = colorPhong(&sphere.material.ka, scene_ptr, &sphere.material.kd, &N, &sphere.material.ks, &ray.line_vector, ray.at(min_t), sphere.material.ns);
+                    ka = sphere.material.ka;
+                    kd = sphere.material.kd;
+                    normal = N;
+                    ks = sphere.material.ks;
+                    ns = sphere.material.ns;
                 }
             }
         }
@@ -123,11 +137,17 @@ public:
                         min_t = t;
 
                         // color = triangulo.cor;
-                        color = colorPhong(&face.ka, scene_ptr, &face.kd, &N, &face.ks, &ray.line_vector, ray.at(min_t), face.ns);
+                        ka = face.ka;
+                        kd = face.kd;
+                        normal = N;
+                        ks = face.ks;
+                        ns = face.ns;
                     }
                 }
             }
         }
+
+        color = colorPhong(&ka, scene_ptr, &kd, &normal, &ks, &ray.line_vector, ray.at(min_t), ns);
 
         // retorna a cor e o t
         return {color, min_t};
@@ -265,6 +285,7 @@ public:
 
         // Luz ambiente
         Vector3D *Ia = &scene_ptr->Ia;
+
         cor.x = Ia->x * ka->x;
         cor.y = Ia->y * ka->y;
         cor.z = Ia->z * ka->z;
