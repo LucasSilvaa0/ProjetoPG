@@ -65,6 +65,7 @@ public:
 
     Vector3D refletir(Vector3D *N) const
     {
+        N->normalize();
         double cos = (N->dot(*this));
         Vector3D r = Vector3D(*this - ((Vector3D(N->x, N->y, N->z) * cos) * 2));
 
