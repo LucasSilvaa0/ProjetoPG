@@ -87,6 +87,7 @@ public:
 
             if (t != -1)
             {
+
                 if (t < min_t)
                 {
                     Vector3D N = ray.at(t) - sphere.C;
@@ -331,11 +332,6 @@ public:
                 soma.y += soma.y * luz->cor.y;
                 soma.z += soma.z * luz->cor.z;
             }
-        }
-
-        if (soma.x < 0 || soma.y < 0 || soma.z < 0)
-        {
-            soma.print();
         }
 
         cor.x += soma.x;

@@ -68,7 +68,7 @@ public:
         w = line_vector.getZ();
 
         double t = -1 * ((a * i + b * j + c * k) + (-a * x0 - b * y0 - c * z0)) / (a * u + b * v + c * w);
-        return t;
+        return max(t, -t);
     }
 
     double l_t_intersection(Triangle &tr)

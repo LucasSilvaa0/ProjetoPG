@@ -15,6 +15,13 @@ public:
 
     Sphere(Point3D &centro, double raio) : C(centro), r(raio)
     {
+        this->material.kd = Vector3D(0.5, 0.5, 0.5);  // Difuso
+        this->material.ks = Vector3D(0.5, 0.5, 0.5);  // Specular
+        this->material.ke = Vector3D(0.5, 0.5, 0.5);  // Emissivo
+        this->material.ka = Vector3D(0.5, 0.5, 0.5);  // Ambiente
+        this->material.ns = 0.5; // Brilho
+        this->material.ni = 0.5; // Índice de refração
+        this->material.d = 0.5;  // Opacidade
     }
 
     Vector3D NormalVector(const Point3D &p)
