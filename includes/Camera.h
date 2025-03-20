@@ -66,17 +66,14 @@ public:
             Plane plane = *plane_ptr;
             double t = ray.l_p_intersection(plane);
 
-            if (t != -1)
+            if (t > 0 && t < min_t)
             {
-                if (t < min_t)
-                {
-                    min_t = t;
-                    ka = plane.material.ka;
-                    kd = plane.material.kd;
-                    normal = plane.normal;
-                    ks = plane.material.ks;
-                    ns = plane.material.ns;
-                }
+                min_t = t;
+                ka = plane.material.ka;
+                kd = plane.material.kd;
+                normal = plane.normal;
+                ks = plane.material.ks;
+                ns = plane.material.ns;
             }
         }
 
@@ -85,20 +82,16 @@ public:
             Sphere sphere = *sphere_ptr;
             double t = ray.l_s_intersection(sphere);
 
-            if (t != -1)
+            if (t > 0 && t < min_t)
             {
-
-                if (t < min_t)
-                {
-                    Vector3D N = ray.at(t) - sphere.C;
-                    N.normalize();
-                    min_t = t;
-                    ka = sphere.material.ka;
-                    kd = sphere.material.kd;
-                    normal = N;
-                    ks = sphere.material.ks;
-                    ns = sphere.material.ns;
-                }
+                Vector3D N = ray.at(t) - sphere.C;
+                N.normalize();
+                min_t = t;
+                ka = sphere.material.ka;
+                kd = sphere.material.kd;
+                normal = N;
+                ks = sphere.material.ks;
+                ns = sphere.material.ns;
             }
         }
 
@@ -129,33 +122,35 @@ public:
                 Triangle triangulo = object_ptr->faceToTriangulo(face);
                 double t = ray.l_t_intersection(triangulo);
 
-                if (t != -1)
+                if (t > 0 && t < min_t)
                 {
-                    if (t < min_t)
-                    {
+                    Vector3D N = triangulo.NormalVector();
+                    min_t = t;
 
-                        Vector3D N = triangulo.NormalVector();
-                        min_t = t;
-
-                        // color = triangulo.cor;
-                        ka = face.ka;
-                        kd = face.kd;
-                        normal = N;
-                        ks = face.ks;
-                        ns = face.ns;
-                    }
+                    // color = triangulo.cor;
+                    ka = face.ka;
+                    kd = face.kd;
+                    normal = N;
+                    ks = face.ks;
+                    ns = face.ns;
                 }
             }
         }
 
         color = colorPhong(&ka, scene_ptr, &kd, &normal, &ks, &ray.line_vector, ray.at(min_t), ns);
 
-        if (contador < 2 && min_t < INFINITY) {
+        if (contador < 2 && min_t < INFINITY)
+        {
             Vector3D reflexao = ray.line_vector.refletir(&normal);
             Line linhareflexao = Line(ray.at(min_t), ray.at(min_t) + reflexao);
-            auto temp = raycolor(linhareflexao, scene_ptr, contador+1);
+            auto temp = raycolor(linhareflexao, scene_ptr, contador + 1);
             Vector3D correfletida;
             correfletida = temp.first;
+
+            if (temp.second == INFINITY)
+            {
+                return {color, min_t};
+            }
 
             color.x = color.x * (1 - ks.x) + correfletida.x * ks.x;
             color.y = color.y * (1 - ks.y) + correfletida.y * ks.y;
@@ -163,6 +158,7 @@ public:
         }
 
         // retorna a cor e o t
+
         return {color, min_t};
     }
 
@@ -247,12 +243,9 @@ public:
             Plane plane = *plane_ptr;
             double t = ray.l_p_intersection(plane);
 
-            if (t != -1)
+            if (t > 0 && t < t_inicial - 0.001)
             {
-                if (t < t_inicial - 0.001)
-                {
-                    return 0;
-                }
+                return 0;
             }
         }
 
@@ -261,12 +254,9 @@ public:
             Sphere sphere = *sphere_ptr;
             double t = ray.l_s_intersection(sphere);
 
-            if (t != -1)
+            if (t > 0 && t < t_inicial - 0.001)
             {
-                if (t < t_inicial - 0.001)
-                {
-                    return 0;
-                }
+                return 0;
             }
         }
 
@@ -277,12 +267,9 @@ public:
                 Triangle triangulo = object_ptr->faceToTriangulo(face);
                 double t = ray.l_t_intersection(triangulo);
 
-                if (t != -1)
+                if (t > 0 && t < t_inicial - 0.001)
                 {
-                    if (t < t_inicial - 0.001)
-                    {
-                        return 0;
-                    }
+                    return 0;
                 }
             }
         }
