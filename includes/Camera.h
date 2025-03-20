@@ -43,7 +43,7 @@ public:
         updateVectors();
     }
 
-    std::pair<Vector3D, double> raycolor(Line &ray, Scene *scene_ptr)
+    std::pair<Vector3D, double> raycolor(Line &ray, Scene *scene_ptr, int contador)
     {
 
         double min_t = INFINITY;
@@ -150,6 +150,18 @@ public:
 
         color = colorPhong(&ka, scene_ptr, &kd, &normal, &ks, &ray.line_vector, ray.at(min_t), ns);
 
+        if (contador < 2 && min_t < INFINITY) {
+            Vector3D reflexao = ray.line_vector.refletir(&normal);
+            Line linhareflexao = Line(ray.at(min_t), ray.at(min_t) + reflexao);
+            auto temp = raycolor(linhareflexao, scene_ptr, contador+1);
+            Vector3D correfletida;
+            correfletida = temp.first;
+
+            color.x = color.x * (1 - ks.x) + correfletida.x * ks.x;
+            color.y = color.y * (1 - ks.y) + correfletida.y * ks.y;
+            color.z = color.z * (1 - ks.z) + correfletida.z * ks.z;
+        }
+
         // retorna a cor e o t
         return {color, min_t};
     }
@@ -182,7 +194,7 @@ public:
 
                 // pegamos a cor do pixel do objeto que intersecta mais perto (retorna um par (cor, t))
 
-                auto temp = raycolor(linha_centro_pixel, scene_ptr);
+                auto temp = raycolor(linha_centro_pixel, scene_ptr, 0);
 
                 cor_do_pixel = temp.first;
                 t = temp.second;
@@ -210,8 +222,6 @@ public:
 
         // Calcula a tela com os pixels
         centro_tela = C + (W * (d * -1));
-        Point3D topo_tela = centro_tela + V;
-        Point3D esquerda_tela = centro_tela + (U * -1);
 
         double p_up = (double)1 / double(h_res);
         double p_dir = (double)1 / double(w_res);
