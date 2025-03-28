@@ -147,14 +147,12 @@ public:
             Vector3D correfletida;
             correfletida = temp.first;
 
-            if (temp.second == INFINITY)
+            if (temp.second != INFINITY)
             {
-                return {color, min_t};
+                color.x = color.x * (1 - ks.x) + correfletida.x * ks.x;
+                color.y = color.y * (1 - ks.y) + correfletida.y * ks.y;
+                color.z = color.z * (1 - ks.z) + correfletida.z * ks.z;
             }
-
-            color.x = color.x * (1 - ks.x) + correfletida.x * ks.x;
-            color.y = color.y * (1 - ks.y) + correfletida.y * ks.y;
-            color.z = color.z * (1 - ks.z) + correfletida.z * ks.z;
         }
 
         // retorna a cor e o t
