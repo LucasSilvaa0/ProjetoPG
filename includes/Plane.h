@@ -22,7 +22,7 @@ public:
         this->material.ke = Vector3D(0.5, 0.5, 0.5); // Emissivo
         this->material.ka = Vector3D(0.5, 0.5, 0.5); // Ambiente
         this->material.ns = 0.5;                     // Brilho
-        this->material.ni = 0.5;                     // Índice de refração
+        this->material.ni = 0;                       // Índice de refração
         this->material.d = 0.5;                      // Opacidade
     }
 

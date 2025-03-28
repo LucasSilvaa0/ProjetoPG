@@ -72,6 +72,28 @@ public:
         return r;
     }
 
+    Vector3D refratar(double n1, double n2, Vector3D *N) const
+    {
+        if (n2 == 0)
+            return Vector3D(0, 0, 0);
+
+        N->normalize();                      // Normalizamos o vetor normal
+        double cosi = N->dot(*this);         // Cosseno do ângulo de incidência
+        double seni = sqrt(1 - cosi * cosi); // seno² do ângulo de incidência
+
+        double senr = (n1 / n2) * seni2;
+        if (senr > 1)
+            return Vector3D(0, 0, 0); // Reflexão total interna
+
+        double cosr = sqrt(1 - senr * senr);
+
+        Vector3D refracao = Vector3D((*this * (n1 / n2)) + (*N * ((n1 / n2) * cosi - cosr)));
+        refracao.normalize(); // Normalizamos o vetor refratado
+
+        // Fórmula do vetor refratado
+        return refracao;
+    }
+
     // Print
     void print() const
     {
