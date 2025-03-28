@@ -15,11 +15,9 @@ int main()
     int height = 600;
     int width = 600;
     objReader *obj = new objReader("input/cubo.obj");
-    // objReader *obj2 = new objReader("input/cubo.obj");
     Camera camera = Camera(Point3D(-12, 6, 0), Point3D(0, 0, 0), (double)1, height, width);
     Scene *cena = new Scene(Vector3D(0.2, 0.2, 0.2));
-    Luz *luz = new Luz(Point3D(2, 30, 0), 0.2, 0.2, 0.2);
-    // Luz *luz2 = new Luz(Point3D(0, 0, -10), 0, 0.3, 0.3);
+    Luz *luz = new Luz(Point3D(2, 30, 0), 0.2, 0.6, 0.2);
     Plane *plano = new Plane(Point3D(20, 0, 0), Vector3D(1, 0, 0));
     Plane *plano2 = new Plane(Point3D(-20, 0, 0), Vector3D(1, 0, 0));
 
@@ -34,16 +32,10 @@ int main()
     cena->planos.push_back(plano);
     cena->esferas.push_back(esfera);
     cena->planos.push_back(chao);
-    // cena->luzes.push_back(luz2);
 
     obj->escalar(2);
     obj->transladar(0, 0, 6);
     obj->rotacionar(0.7, 'y');
-
-    // obj2->escalar(2);
-    // obj2->transladar(5, -3, 0);
-    // obj2->rotacionar(-0.7, 'z');
-    // obj2->rotacionar(0.7, 'y');
 
     cena->planos.push_back(plano2);
     obj->curMaterial.ks = esfera->material.ks = plano->material.kd = plano->material.ka = plano2->material.kd = plano2->material.ka = Vector3D(0.1, 0.1, 0.1);

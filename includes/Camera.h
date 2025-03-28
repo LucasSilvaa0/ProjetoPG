@@ -288,9 +288,10 @@ public:
         cor.y = Ia->y * ka->y;
         cor.z = Ia->z * ka->z;
 
-        Vector3D soma = Vector3D(0, 0, 0);
+        Vector3D somatotal = Vector3D(0, 0, 0);
         for (Luz *luz : scene_ptr->luzes)
         {
+            Vector3D soma = Vector3D(0, 0, 0);
             if (lightRender(luz, &Pintercessao, *scene_ptr) == 1)
             {
                 // Luz difusa
@@ -316,24 +317,20 @@ public:
                 if (vrn < 0)
                     vrn *= -1;
 
-                le.x = luz->cor.x * (ks->x * vrn);
-                le.y = luz->cor.y * (ks->y * vrn);
-                le.z = luz->cor.z * (ks->z * vrn);
-
-                soma.x += le.x;
-                soma.y += le.y;
-                soma.z += le.z;
+                soma.x += ks->x * vrn;
+                soma.y += ks->y * vrn;
+                soma.z += ks->z * vrn;
 
                 // Intensidade da luz
-                soma.x += soma.x * luz->cor.x;
-                soma.y += soma.y * luz->cor.y;
-                soma.z += soma.z * luz->cor.z;
+                somatotal.x += soma.x * luz->cor.x;
+                somatotal.y += soma.y * luz->cor.y;
+                somatotal.z += soma.z * luz->cor.z;
             }
         }
 
-        cor.x += soma.x;
-        cor.y += soma.y;
-        cor.z += soma.z;
+        cor.x += somatotal.x;
+        cor.y += somatotal.y;
+        cor.z += somatotal.z;
 
         if (cor.x > 1)
             cor.x = 1;

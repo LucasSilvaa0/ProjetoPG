@@ -81,7 +81,7 @@ public:
         double cosi = N->dot(*this);         // Cosseno do ângulo de incidência
         double seni = sqrt(1 - cosi * cosi); // seno² do ângulo de incidência
 
-        double senr = (n1 / n2) * seni2;
+        double senr = (n1 / n2) * seni;
         if (senr > 1)
             return Vector3D(0, 0, 0); // Reflexão total interna
 
