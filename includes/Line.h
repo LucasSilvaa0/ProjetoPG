@@ -38,12 +38,15 @@ public:
         Vector3D oc = s.C - point1;
         auto a = line_vector.dot(line_vector);
         auto h = line_vector.dot(oc);
-        auto c = oc.dot(oc) - s.r*s.r;
-        auto discriminant = h*h - a*c;
-        if(discriminant<0){
-            return -1.0;
-        }else{
-            return (h-std::sqrt(discriminant))/a;
+        auto c = oc.dot(oc) - s.r * s.r;
+        auto discriminant = h * h - a * c;
+        if (discriminant < 0)
+        {
+            return -1;
+        }
+        else
+        {
+            return (h - std::sqrt(discriminant)) / a;
         }
     }
 
@@ -68,7 +71,7 @@ public:
         w = line_vector.getZ();
 
         double t = -1 * ((a * i + b * j + c * k) + (-a * x0 - b * y0 - c * z0)) / (a * u + b * v + c * w);
-        return max(t, -t);
+        return t;
     }
 
     double l_t_intersection(Triangle &tr)

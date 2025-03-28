@@ -43,7 +43,7 @@ public:
         updateVectors();
     }
 
-    std::pair<Vector3D, double> raycolor(Line &ray, Scene *scene_ptr)
+    std::pair<Vector3D, double> raycolor(Line &ray, Scene *scene_ptr, int contador)
     {
 
         double min_t = INFINITY;
@@ -66,17 +66,14 @@ public:
             Plane plane = *plane_ptr;
             double t = ray.l_p_intersection(plane);
 
-            if (t != -1)
+            if (t > 0 && t < min_t)
             {
-                if (t < min_t)
-                {
-                    min_t = t;
-                    ka = plane.material.ka;
-                    kd = plane.material.kd;
-                    normal = plane.normal;
-                    ks = plane.material.ks;
-                    ns = plane.material.ns;
-                }
+                min_t = t;
+                ka = plane.material.ka;
+                kd = plane.material.kd;
+                normal = plane.normal;
+                ks = plane.material.ks;
+                ns = plane.material.ns;
             }
         }
 
@@ -85,20 +82,16 @@ public:
             Sphere sphere = *sphere_ptr;
             double t = ray.l_s_intersection(sphere);
 
-            if (t != -1)
+            if (t > 0 && t < min_t)
             {
-
-                if (t < min_t)
-                {
-                    Vector3D N = ray.at(t) - sphere.C;
-                    N.normalize();
-                    min_t = t;
-                    ka = sphere.material.ka;
-                    kd = sphere.material.kd;
-                    normal = N;
-                    ks = sphere.material.ks;
-                    ns = sphere.material.ns;
-                }
+                Vector3D N = ray.at(t) - sphere.C;
+                N.normalize();
+                min_t = t;
+                ka = sphere.material.ka;
+                kd = sphere.material.kd;
+                normal = N;
+                ks = sphere.material.ks;
+                ns = sphere.material.ns;
             }
         }
 
@@ -129,28 +122,43 @@ public:
                 Triangle triangulo = object_ptr->faceToTriangulo(face);
                 double t = ray.l_t_intersection(triangulo);
 
-                if (t != -1)
+                if (t > 0 && t < min_t)
                 {
-                    if (t < min_t)
-                    {
+                    Vector3D N = triangulo.NormalVector();
+                    min_t = t;
 
-                        Vector3D N = triangulo.NormalVector();
-                        min_t = t;
-
-                        // color = triangulo.cor;
-                        ka = face.ka;
-                        kd = face.kd;
-                        normal = N;
-                        ks = face.ks;
-                        ns = face.ns;
-                    }
+                    // color = triangulo.cor;
+                    ka = face.ka;
+                    kd = face.kd;
+                    normal = N;
+                    ks = face.ks;
+                    ns = face.ns;
                 }
             }
         }
 
         color = colorPhong(&ka, scene_ptr, &kd, &normal, &ks, &ray.line_vector, ray.at(min_t), ns);
 
+        if (contador < 2 && min_t < INFINITY)
+        {
+            Vector3D reflexao = ray.line_vector.refletir(&normal);
+            Line linhareflexao = Line(ray.at(min_t), ray.at(min_t) + reflexao);
+            auto temp = raycolor(linhareflexao, scene_ptr, contador + 1);
+            Vector3D correfletida;
+            correfletida = temp.first;
+
+            if (temp.second == INFINITY)
+            {
+                return {color, min_t};
+            }
+
+            color.x = color.x * (1 - ks.x) + correfletida.x * ks.x;
+            color.y = color.y * (1 - ks.y) + correfletida.y * ks.y;
+            color.z = color.z * (1 - ks.z) + correfletida.z * ks.z;
+        }
+
         // retorna a cor e o t
+
         return {color, min_t};
     }
 
@@ -182,7 +190,7 @@ public:
 
                 // pegamos a cor do pixel do objeto que intersecta mais perto (retorna um par (cor, t))
 
-                auto temp = raycolor(linha_centro_pixel, scene_ptr);
+                auto temp = raycolor(linha_centro_pixel, scene_ptr, 0);
 
                 cor_do_pixel = temp.first;
                 t = temp.second;
@@ -210,8 +218,6 @@ public:
 
         // Calcula a tela com os pixels
         centro_tela = C + (W * (d * -1));
-        Point3D topo_tela = centro_tela + V;
-        Point3D esquerda_tela = centro_tela + (U * -1);
 
         double p_up = (double)1 / double(h_res);
         double p_dir = (double)1 / double(w_res);
@@ -237,12 +243,9 @@ public:
             Plane plane = *plane_ptr;
             double t = ray.l_p_intersection(plane);
 
-            if (t != -1)
+            if (t > 0 && t < t_inicial - 0.001)
             {
-                if (t < t_inicial - 0.001)
-                {
-                    return 0;
-                }
+                return 0;
             }
         }
 
@@ -251,12 +254,9 @@ public:
             Sphere sphere = *sphere_ptr;
             double t = ray.l_s_intersection(sphere);
 
-            if (t != -1)
+            if (t > 0 && t < t_inicial - 0.001)
             {
-                if (t < t_inicial - 0.001)
-                {
-                    return 0;
-                }
+                return 0;
             }
         }
 
@@ -267,12 +267,9 @@ public:
                 Triangle triangulo = object_ptr->faceToTriangulo(face);
                 double t = ray.l_t_intersection(triangulo);
 
-                if (t != -1)
+                if (t > 0 && t < t_inicial - 0.001)
                 {
-                    if (t < t_inicial - 0.001)
-                    {
-                        return 0;
-                    }
+                    return 0;
                 }
             }
         }
@@ -291,9 +288,10 @@ public:
         cor.y = Ia->y * ka->y;
         cor.z = Ia->z * ka->z;
 
-        Vector3D soma = Vector3D(0, 0, 0);
+        Vector3D somatotal = Vector3D(0, 0, 0);
         for (Luz *luz : scene_ptr->luzes)
         {
+            Vector3D soma = Vector3D(0, 0, 0);
             if (lightRender(luz, &Pintercessao, *scene_ptr) == 1)
             {
                 // Luz difusa
@@ -319,24 +317,20 @@ public:
                 if (vrn < 0)
                     vrn *= -1;
 
-                le.x = luz->cor.x * (ks->x * vrn);
-                le.y = luz->cor.y * (ks->y * vrn);
-                le.z = luz->cor.z * (ks->z * vrn);
-
-                soma.x += le.x;
-                soma.y += le.y;
-                soma.z += le.z;
+                soma.x += ks->x * vrn;
+                soma.y += ks->y * vrn;
+                soma.z += ks->z * vrn;
 
                 // Intensidade da luz
-                soma.x += soma.x * luz->cor.x;
-                soma.y += soma.y * luz->cor.y;
-                soma.z += soma.z * luz->cor.z;
+                somatotal.x += soma.x * luz->cor.x;
+                somatotal.y += soma.y * luz->cor.y;
+                somatotal.z += soma.z * luz->cor.z;
             }
         }
 
-        cor.x += soma.x;
-        cor.y += soma.y;
-        cor.z += soma.z;
+        cor.x += somatotal.x;
+        cor.y += somatotal.y;
+        cor.z += somatotal.z;
 
         if (cor.x > 1)
             cor.x = 1;
