@@ -133,16 +133,18 @@ public:
 
             // REFLEXÃO
             Vector3D reflexao = ray.line_vector.refletir(&normal);
-            Vector3D offset = reflexao * 0.001d;
-            Point3D offsetPoint = Point3D(ray.at(min_t).x + offset.x, ray.at(min_t).y + offset.y, ray.at(min_t).z + offset.z);
-            Line linhareflexao = Line(offsetPoint, offsetPoint + reflexao);
+            Vector3D offsetreflexao = reflexao * 0.001d;
+            Point3D offsetreflexaoPoint = Point3D(ray.at(min_t).x + offsetreflexao.x, ray.at(min_t).y + offsetreflexao.y, ray.at(min_t).z + offsetreflexao.z);
+            Line linhareflexao = Line(offsetreflexaoPoint, offsetreflexaoPoint + reflexao);
             auto tempreflexao = raycolor(linhareflexao, scene_ptr, contador + 1, ni2);
             Vector3D correfletida;
             correfletida = tempreflexao.first;
 
             // REFRAÇÃO
             Vector3D refracao = ray.line_vector.refratar(ni1, ni2, &normal);
-            Line linharefracao = Line(ray.at(min_t), ray.at(min_t) + refracao);
+            Vector3D offsetrefracao = refracao * 0.001d;
+            Point3D offsetrefracaoPoint = Point3D(ray.at(min_t).x + offsetrefracao.x, ray.at(min_t).y + offsetrefracao.y, ray.at(min_t).z + offsetrefracao.z);
+            Line linharefracao = Line(offsetrefracaoPoint, offsetrefracaoPoint + refracao);
             auto temprefracao = raycolor(linharefracao, scene_ptr, contador + 1, ni2);
             Vector3D correfracao;
             correfracao = temprefracao.first;
