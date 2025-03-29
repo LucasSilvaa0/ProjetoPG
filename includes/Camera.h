@@ -133,7 +133,9 @@ public:
 
             // REFLEXÃO
             Vector3D reflexao = ray.line_vector.refletir(&normal);
-            Line linhareflexao = Line(ray.at(min_t), ray.at(min_t) + reflexao);
+            Vector3D offset = reflexao * 0.001d;
+            Point3D offsetPoint = Point3D(ray.at(min_t).x + offset.x, ray.at(min_t).y + offset.y, ray.at(min_t).z + offset.z);
+            Line linhareflexao = Line(offsetPoint, offsetPoint + reflexao);
             auto tempreflexao = raycolor(linhareflexao, scene_ptr, contador + 1, ni2);
             Vector3D correfletida;
             correfletida = tempreflexao.first;
@@ -164,6 +166,13 @@ public:
         }
 
         // retorna a cor e o t
+
+        if (color.x > 1)
+            color.x = 1;
+        if (color.y > 1)
+            color.y = 1;
+        if (color.z > 1)
+            color.z = 1;
 
         return {color, min_t};
     }

@@ -19,7 +19,7 @@ int main()
     Camera camera = Camera(Point3D(-120, 60, 0), Point3D(0, 0, 0), (double)10, height, width);
     Scene *cena = new Scene(Vector3D(0.2, 0.2, 0.2));
     Luz *luz = new Luz(Point3D(2, 30, 0), 0.2, 0.2, 0.2);
-    // Luz *luz2 = new Luz(Point3D(0, 0, -10), 0, 0.3, 0.3);
+    // Luz *luz2 = new Luz(Point3D(0, -2, 0), 0.2, 0.2, 0.2);
     Plane *plano = new Plane(Point3D(20, 0, 0), Vector3D(1, 0, 0));
     Plane *teto = new Plane(Point3D(20, 200, 0), Vector3D(0, 1, 0));
     Plane *plano3 = new Plane(Point3D(-200, 0, 0), Vector3D(1, 0, 0));
@@ -29,7 +29,6 @@ int main()
 
     Point3D ce = Point3D(3.5, -2.5, 2);
     Sphere *esfera = new Sphere(ce, 2);
-    esfera->material.d = 0.4;
 
     cena->objetos.push_back(obj);
     cena->luzes.push_back(luz);
