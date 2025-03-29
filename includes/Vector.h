@@ -77,8 +77,15 @@ public:
         if (n2 == 0)
             return Vector3D(0, 0, 0);
 
-        N->normalize();                      // Normalizamos o vetor normal
-        double cosi = N->dot(*this);         // Cosseno do ângulo de incidência
+        if (n1 == n2)
+            return Vector3D(*this); // Se os índices de refração forem iguais, não há refração
+
+        N->normalize();              // Normalizamos o vetor normal
+        double cosi = N->dot(*this); // Cosseno do ângulo de incidência
+
+        if (cosi < 0)
+            cosi *= -1; // Se o ângulo for negativo, invertemos o vetor normal
+
         double seni = sqrt(1 - cosi * cosi); // seno² do ângulo de incidência
 
         double senr = (n1 / n2) * seni;
