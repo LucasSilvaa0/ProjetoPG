@@ -6,6 +6,7 @@
 #include "Sphere.h"
 #include "Line.h"
 #include "Scene.h"
+#include "RetanguloIluminado.h"
 #include <iostream>
 #include <fstream>
 #include <cmath>
@@ -294,6 +295,62 @@ public:
         return 1;
     }
 
+    int retanguloRender(RetanguloIluminado *retangulo, Point3D ponto, Scene scene_ptr)
+    {
+        Line ray = Line(ponto, ponto + (retangulo->direcao * -1));
+
+        double t;
+        double t_final = -1;
+
+        Triangle t1 = Triangle(retangulo->p1, retangulo->p3, retangulo->p2, retangulo->normal, retangulo->normal, retangulo->normal, retangulo->color.x, retangulo->color.y, retangulo->color.z);
+        t_final = ray.l_t_intersection(t1);
+
+        Triangle t2 = Triangle(retangulo->p1, retangulo->p3, retangulo->p4, retangulo->normal, retangulo->normal, retangulo->normal, retangulo->color.x, retangulo->color.y, retangulo->color.z);
+        t = ray.l_t_intersection(t2);
+        if (t_final == -1 || (t != -1 && t < t_final))
+            t_final = t;
+
+        for (Plane *plane_ptr : scene_ptr.planos)
+        {
+            Plane plane = *plane_ptr;
+            t = ray.l_p_intersection(plane);
+
+            if (t > 0 && t < t_final)
+            {
+                return 0;
+            }
+        }
+
+        for (Sphere *sphere_ptr : scene_ptr.esferas)
+        {
+            Sphere sphere = *sphere_ptr;
+            t = ray.l_s_intersection(sphere);
+
+            if (t > 0 && t < t_final)
+            {
+                return 0;
+            }
+        }
+
+        for (objReader *object_ptr : scene_ptr.objetos)
+        {
+            for (Face face : object_ptr->getFaces())
+            {
+                Triangle triangulo = object_ptr->faceToTriangulo(face);
+                t = ray.l_t_intersection(triangulo);
+
+                if (t > 0 && t < t_final)
+                {
+                    return 0;
+                }
+            }
+        }
+
+        if (t_final != -1)
+            return 1;
+        return 0;
+    }
+
     Vector3D colorPhong(Vector3D *ka, Scene *scene_ptr, Vector3D *kd, Vector3D *N, Vector3D *ks, Vector3D *V, Point3D Pintercessao, int n)
     {
         Vector3D cor = Vector3D(0, 0, 0);
@@ -342,6 +399,45 @@ public:
                 somatotal.x += soma.x * luz->cor.x;
                 somatotal.y += soma.y * luz->cor.y;
                 somatotal.z += soma.z * luz->cor.z;
+            }
+        }
+
+        for (RetanguloIluminado *luz : scene_ptr->retangulosiluminados)
+        {
+            Vector3D soma = Vector3D(0, 0, 0);
+            if (retanguloRender(luz, Pintercessao, *scene_ptr) == 1)
+            {
+                // Luz difusa
+                Vector3D L = luz->direcao;
+                L.normalize();
+                N->normalize();
+
+                double cosNL = N->dot(L);
+
+                if (cosNL < 0)
+                    cosNL *= -1;
+
+                soma.x += kd->x * cosNL;
+                soma.y += kd->y * cosNL;
+                soma.z += kd->z * cosNL;
+
+                // Luz especular
+                Vector3D le = Vector3D(0, 0, 0);
+
+                Vector3D r = L.refletir(N);
+                double vrn = pow(V->dot(r), n);
+
+                if (vrn < 0)
+                    vrn *= -1;
+
+                soma.x += ks->x * vrn;
+                soma.y += ks->y * vrn;
+                soma.z += ks->z * vrn;
+
+                // Intensidade da luz
+                somatotal.x += soma.x * luz->color.x;
+                somatotal.y += soma.y * luz->color.y;
+                somatotal.z += soma.z * luz->color.z;
             }
         }
 

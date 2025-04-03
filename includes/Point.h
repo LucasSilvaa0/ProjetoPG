@@ -27,7 +27,7 @@ public:
     // Print
     void print() const
     {
-        std::cout << "{" << x << ", " << y << ", " << z << "},";
+        std::cout << "(" << x << ", " << y << ", " << z << ")\n";
     }
 
     // Getters

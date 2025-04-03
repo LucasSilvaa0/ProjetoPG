@@ -8,6 +8,7 @@
 #include "Triangle.h"
 #include "objetificador.h"
 #include "Luz.h"
+#include "RetanguloIluminado.h"
 #include <vector>
 #include <map>
 
@@ -19,6 +20,7 @@ public:
     std::vector<Triangle *> triangulos;
     std::vector<objReader *> objetos;
     std::vector<Luz *> luzes;
+    std::vector<RetanguloIluminado *> retangulosiluminados;
     colormap cmap;
 
     Vector3D Ia;
