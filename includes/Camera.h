@@ -7,6 +7,7 @@
 #include "Line.h"
 #include "Scene.h"
 #include "RetanguloIluminado.h"
+#include "Semirreta.h"
 #include <iostream>
 #include <fstream>
 #include <cmath>
@@ -295,6 +296,33 @@ public:
         return 1;
     }
 
+    int retanguloEntreLuz(RetanguloIluminado *retangulo, Point3D Pinicial, Point3D Pintercessao)
+    {
+        bool passou = false;
+
+        Plane plano = Plane(retangulo->p1, retangulo->normal);
+
+        Line v1 = Line(Pinicial, Pinicial + retangulo->direcao);
+        double t1 = v1.l_p_intersection(plano);
+        Point3D p1 = v1.at(t1);
+
+        Line v2 = Line(Pintercessao, Pintercessao + retangulo->direcao);
+        double t2 = v2.l_p_intersection(plano);
+        Point3D p2 = v2.at(t2);
+
+        Semirreta sr_raio = Semirreta(p1, p2);
+
+        passou = (sr_raio.sr_sr_intersection(Semirreta(retangulo->getP1(), retangulo->getP2())) ||
+                  sr_raio.sr_sr_intersection(Semirreta(retangulo->getP2(), retangulo->getP3())) ||
+                  sr_raio.sr_sr_intersection(Semirreta(retangulo->getP3(), retangulo->getP4())) ||
+                  sr_raio.sr_sr_intersection(Semirreta(retangulo->getP1(), retangulo->getP4())));
+
+        if (passou == true)
+            return 2;
+
+        return 0;
+    }
+
     int retanguloRender(RetanguloIluminado *retangulo, Point3D ponto, Scene scene_ptr)
     {
         Line ray = Line(ponto, ponto + (retangulo->direcao * -1));
@@ -438,6 +466,12 @@ public:
                 somatotal.x += soma.x * luz->color.x;
                 somatotal.y += soma.y * luz->color.y;
                 somatotal.z += soma.z * luz->color.z;
+            }
+            else if (retanguloEntreLuz(luz, this->C, Pintercessao) == 2)
+            {
+                somatotal.x += luz->color.x * 0.15;
+                somatotal.y += luz->color.y * 0.15;
+                somatotal.z += luz->color.z * 0.15;
             }
         }
 
