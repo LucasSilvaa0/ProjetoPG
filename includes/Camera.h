@@ -335,7 +335,7 @@ public:
 
         Triangle t2 = Triangle(retangulo->p1, retangulo->p3, retangulo->p4, retangulo->normal, retangulo->normal, retangulo->normal, retangulo->color.x, retangulo->color.y, retangulo->color.z);
         t = ray.l_t_intersection(t2);
-        if (t_final == -1 || (t != -1 && t < t_final))
+        if (t_final == -1 || (t != -1 && t < t_final - 0.001))
             t_final = t;
 
         for (Plane *plane_ptr : scene_ptr.planos)
@@ -343,7 +343,7 @@ public:
             Plane plane = *plane_ptr;
             t = ray.l_p_intersection(plane);
 
-            if (t > 0 && t < t_final)
+            if (t > 0.001 && t < t_final - 0.001)
             {
                 return 0;
             }
@@ -354,7 +354,7 @@ public:
             Sphere sphere = *sphere_ptr;
             t = ray.l_s_intersection(sphere);
 
-            if (t > 0 && t < t_final)
+            if (t > 0.001 && t < t_final - 0.001)
             {
                 return 0;
             }
@@ -367,7 +367,7 @@ public:
                 Triangle triangulo = object_ptr->faceToTriangulo(face);
                 t = ray.l_t_intersection(triangulo);
 
-                if (t > 0 && t < t_final)
+                if (t > 0.001 && t < t_final - 0.001)
                 {
                     return 0;
                 }
@@ -467,12 +467,12 @@ public:
                 somatotal.y += soma.y * luz->color.y;
                 somatotal.z += soma.z * luz->color.z;
             }
-            else if (retanguloEntreLuz(luz, this->C, Pintercessao) == 2)
-            {
-                somatotal.x += luz->color.x * 0.15;
-                somatotal.y += luz->color.y * 0.15;
-                somatotal.z += luz->color.z * 0.15;
-            }
+            // else if (retanguloEntreLuz(luz, this->C, Pintercessao) == 2)
+            // {
+            //     somatotal.x += luz->color.x * 0.95;
+            //     somatotal.y += luz->color.y * 0.95;
+            //     somatotal.z += luz->color.z * 0.95;
+            // }
         }
 
         cor.x += somatotal.x;

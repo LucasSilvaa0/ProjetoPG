@@ -24,6 +24,7 @@ public:
         this->normal.normalize();
         this->color = color;
         this->direcao = direcao;
+        this->direcao.normalize();
 
         this->calcularPontos(comprimento, largura);
     }

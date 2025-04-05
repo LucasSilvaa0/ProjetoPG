@@ -67,14 +67,11 @@ public:
         double z1 = z0 + c * t1;
         double z2 = k + w * t2;
 
-        if (x1 == x2 && y1 == y2 && z1 == z2 &&
-            (((x1 >= point1.x && x1 <= point2.x) || (x1 <= point1.x && x1 >= point2.x)) &&
-             ((y1 >= point1.y && y1 <= point2.y) || (y1 <= point1.y && y1 >= point2.y)) &&
-             ((z1 >= point1.z && z1 <= point2.z) || (z1 <= point1.z && z1 >= point2.z))) &&
-            (t1 >= 0 && t2 >= 0 && t1 <= 1 && t2 <= 1))
+        if (x1 == x2 && y1 == y2 && z1 == z2 && t1 >= 0 && t2 >= 0 && t1 <= 1 && t2 <= 1 ||
+            (((x0 >= sr2.point1.x && x0 <= sr2.point2.x) || (x0 <= sr2.point1.x && x0 >= sr2.point2.x)) &&
+             ((y0 >= sr2.point1.y && y0 <= sr2.point2.y) || (y0 <= sr2.point1.y && y0 >= sr2.point2.y)) &&
+             ((z0 >= sr2.point1.z && z0 <= sr2.point2.z) || (z0 <= sr2.point1.z && z0 >= sr2.point2.z))))
         {
-            // std::cout << x1 << " " << y1 << " " << z1 << "\n";
-            // std::cout << x2 << " " << y2 << " " << z2 << "\n";
             return true;
         }
 
